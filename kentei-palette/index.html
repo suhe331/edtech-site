@@ -5,455 +5,196 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>検定パレット｜外に出て、写真を撮って、自分で問題をつくる</title>
 <meta name="description" content="検定パレットは、子どもが自分で撮った写真から自由に検定問題をつくり、友達と出し合える学習サービス。総合的な探究の時間、産業教育、自然体験などで使えます。">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css">
 <style>
-:root{
-  --navy:#1f2a5c; --navy-d:#141b3f; --dusk:#3b3f8f;
-  --sun:#ff7a3d; --sun-l:#fff0e6; --gold:#ffc24a; --rose:#f2899b;
-  --lake:#e9eefb; --paper:#fffaf4; --line:#e8e0d4; --text:#1c1b22; --muted:#6a6772;
-  --ok:#16a34a; --ok-l:#f0fdf4;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','BIZ UDPGothic','Noto Sans JP',sans-serif;color:var(--text);background:#fff;line-height:1.8;-webkit-font-smoothing:antialiased}
-a{color:inherit}
-.container{max-width:1080px;margin:0 auto;padding:0 24px}
-section{padding:80px 0}
-.bg-paper{background:var(--paper)}
-.sec-head{text-align:center;margin-bottom:40px}
-.sec-en{font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--sun);text-transform:uppercase;margin-bottom:6px}
-.sec-title{font-size:clamp(22px,3.1vw,30px);font-weight:800;line-height:1.5}
-.hl{background:linear-gradient(transparent 62%,var(--gold) 62%)}
-.sec-lead{margin:12px auto 0;max-width:660px;font-size:14.5px;color:var(--muted);line-height:1.95}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:700;text-decoration:none;border-radius:10px;padding:13px 24px;font-size:15px;border:1.5px solid transparent;cursor:pointer;font-family:inherit;transition:.15s}
-.btn-sun{background:var(--sun);color:#fff}.btn-sun:hover{filter:brightness(.93)}
-.btn-navy{background:var(--navy);color:#fff}.btn-navy:hover{background:var(--navy-d)}
-.btn-line{background:#fff;color:var(--navy);border-color:var(--navy)}.btn-line:hover{background:var(--navy);color:#fff}
-.btn-ghost{background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.55)}.btn-ghost:hover{background:#fff;color:var(--navy)}
-
-/* header */
-.hd{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.95);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
-.hd-in{display:flex;align-items:center;gap:24px;max-width:1080px;margin:0 auto;padding:12px 24px}
-.logo{font-size:19px;font-weight:800;text-decoration:none;display:flex;align-items:center;gap:8px}
-.dots{display:flex;gap:3px}.dots i{width:9px;height:9px;border-radius:50%;display:block}
-.dots i:nth-child(1){background:var(--sun)}.dots i:nth-child(2){background:var(--gold)}.dots i:nth-child(3){background:var(--rose)}.dots i:nth-child(4){background:var(--dusk)}
-.by{font-size:11px;color:var(--muted);text-decoration:none;margin-left:-8px}
-.by:hover{color:var(--sun)}
-.nav{display:none;gap:20px;font-size:13.5px;font-weight:600;margin-left:6px}
-.nav a{text-decoration:none}.nav a:hover{color:var(--sun)}
-@media(min-width:960px){.nav{display:flex}}
-.hd .btn{margin-left:auto;padding:9px 16px;font-size:13px;border-radius:8px}
-
-/* hero */
-.hero{background:linear-gradient(180deg,#1b2254 0%,#3b3f8f 38%,#c4607a 68%,#ff9a4d 92%,#ffc24a 100%);color:#fff;padding:76px 0 0;position:relative;overflow:hidden}
-.hero-grid{display:grid;grid-template-columns:1fr;gap:36px;align-items:center}
-@media(min-width:900px){.hero-grid{grid-template-columns:1.1fr .9fr}}
-.badge{display:inline-block;font-size:12.5px;font-weight:700;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);padding:5px 14px;border-radius:20px;margin-bottom:18px}
-.hero h1{font-size:clamp(27px,4.2vw,42px);font-weight:800;line-height:1.45;text-wrap:balance}
-.hero h1 em{font-style:normal;color:var(--gold)}
-.hero p.def{margin-top:16px;font-size:15.5px;line-height:1.95;max-width:520px;color:#f3eefc}
-.ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
-.sun{position:absolute;right:-60px;bottom:-110px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,#fff6d6 0%,#ffd36b 45%,rgba(255,194,74,0) 70%);opacity:.9;pointer-events:none}
-.water{height:60px;margin-top:48px;background:repeating-linear-gradient(180deg,rgba(255,255,255,.18) 0 2px,transparent 2px 9px);opacity:.5}
-.q-card{background:#fff;color:var(--text);border-radius:16px;padding:18px;box-shadow:0 24px 48px -22px rgba(10,12,40,.6);position:relative;z-index:1}
-.q-photo{height:104px;border-radius:10px;background:linear-gradient(180deg,#bfe0a8,#e9d28a);display:flex;align-items:flex-end;justify-content:space-between;padding:8px 10px;font-size:11px;color:#3a4a2a;font-weight:700}
-.q-by{font-size:10.5px;color:var(--muted);margin:10px 0 4px}
-.q-q{font-size:14px;font-weight:700;line-height:1.7;margin-bottom:10px}
-.q-c{font-size:12.5px;border:1.5px solid var(--line);border-radius:8px;padding:8px 11px;margin-bottom:6px}
-.q-c.ok{border-color:var(--ok);background:var(--ok-l);color:var(--ok);font-weight:700}
-.q-note{position:absolute;left:-12px;top:-16px;background:var(--sun);color:#fff;font-size:11px;font-weight:800;padding:5px 12px;border-radius:20px;transform:rotate(-4deg);z-index:2}
-.stack{position:relative}
-.strip{background:rgba(255,255,255,.96);color:var(--text);border-radius:16px 16px 0 0;display:grid;grid-template-columns:repeat(3,1fr);position:relative;z-index:2}
-.strip div{padding:16px 10px;text-align:center;border-left:1px solid var(--line)}
-.strip div:first-child{border:none}
-.strip b{display:block;font-size:clamp(14px,2vw,17px);color:var(--navy)}
-.strip span{font-size:11.5px;color:var(--muted)}
-
-/* what */
-.steps{display:grid;grid-template-columns:1fr;gap:14px}
-@media(min-width:880px){.steps{grid-template-columns:repeat(3,1fr)}}
-.step{background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px 22px;text-align:center;position:relative}
-.step .ico{width:62px;height:62px;border-radius:50%;background:var(--sun-l);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 10px}
-.step .n{font-size:11px;font-weight:800;color:var(--sun);letter-spacing:.08em}
-.step h3{font-size:17px;font-weight:800;margin:2px 0 8px}
-.step p{font-size:13.2px;color:#4a4752;line-height:1.9;text-align:left}
-.callout{margin:28px auto 0;max-width:820px;background:var(--sun-l);border-radius:16px;padding:20px 24px;font-size:14px;line-height:1.95;text-align:center}
-.callout b{color:var(--navy)}
-
-/* scenes */
-.scenes{display:grid;grid-template-columns:1fr;gap:16px}
-@media(min-width:760px){.scenes{grid-template-columns:repeat(2,1fr)}}
-.scene{background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px 22px;display:flex;gap:16px}
-.scene .e{font-size:34px;flex:0 0 auto}
-.scene h3{font-size:16.5px;font-weight:800;margin-bottom:4px}
-.scene p{font-size:13.2px;color:#4a4752;line-height:1.9}
-.scene .ex{margin-top:8px;font-size:12.2px;color:var(--dusk);background:var(--lake);border-radius:8px;padding:6px 10px;line-height:1.7}
-
-/* teacher merits */
-.merit{display:grid;grid-template-columns:1fr;gap:14px}
-@media(min-width:760px){.merit{grid-template-columns:repeat(2,1fr)}}
-.mcard{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px 22px;display:flex;gap:14px}
-.mcard .t{flex:0 0 auto;width:34px;height:34px;border-radius:50%;background:var(--navy);color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
-.mcard h3{font-size:15px;font-weight:800;margin-bottom:2px}
-.mcard p{font-size:13px;color:#4a4752;line-height:1.85}
-
-/* curriculum table */
-.tbl{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;font-size:13.5px}
-.tbl th,.tbl td{padding:14px 16px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;line-height:1.85}
-.tbl thead th{background:var(--navy);color:#fff;font-size:12.5px}
-.tbl tbody tr:last-child td{border-bottom:none}
-.tbl td:first-child{font-weight:700;width:34%;background:#fcfbf8}
-.small{margin-top:14px;font-size:12px;color:var(--muted);line-height:1.9}
-@media(max-width:640px){.tbl,.tbl tbody,.tbl tr,.tbl td,.tbl th{display:block;width:100%}.tbl thead{display:none}.tbl td:first-child{width:100%;border-bottom:none;padding-bottom:2px}}
-
-/* demo */
-.demo{background:var(--navy);color:#fff}
-.demo .sec-lead{color:#c9cdea}.demo .sec-en{color:var(--gold)}
-.demo-box{max-width:760px;margin:0 auto;background:#fff;color:var(--text);border-radius:20px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(0,0,0,.6)}
-.tabs{display:flex;background:var(--lake)}
-.tab{flex:1;padding:13px 4px;text-align:center;font-size:12.5px;font-weight:700;color:var(--muted);border-bottom:3px solid transparent}
-.tab.on{color:var(--navy);background:#fff;border-bottom-color:var(--sun)}
-.pane{display:none;padding:26px}.pane.on{display:block}
-.pane h3{font-size:16px;font-weight:800;margin-bottom:4px}
-.pane .hint{font-size:12.5px;color:var(--muted);margin-bottom:16px}
+.hero.kp{background:#fff8f3}
+.hero.kp .mosaic .hx{--c:var(--brand)}
+.lbl{font-weight:800;color:var(--brand);margin-bottom:8px;font-size:15px}
+.demo{background:#16213a;color:#fff}
+.demo .eyebrow{color:#fff}
+.dbox{max-width:760px;margin:44px auto 0;background:#fff;color:var(--text);border-radius:26px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(0,0,0,.6)}
+.tabs{display:flex;background:var(--brand-soft)}
+.tab{flex:1;padding:14px 4px;text-align:center;font-size:13px;font-weight:800;color:var(--muted);border-bottom:3px solid transparent}
+.tab.on{color:var(--brand);background:#fff;border-bottom-color:var(--brand)}
+.pane{display:none;padding:28px}.pane.on{display:block}
+.pane h3{font-size:19px;font-weight:900;margin-bottom:14px}
 .photos{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 @media(max-width:520px){.photos{grid-template-columns:1fr}}
-.ph{border:2px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer;background:#fff;text-align:left;font-family:inherit;padding:0}
-.ph:hover{border-color:var(--sun)}
-.ph.sel{border-color:var(--sun);box-shadow:0 0 0 3px var(--sun-l)}
-.ph .pic{height:84px;display:flex;align-items:center;justify-content:center;font-size:36px}
-.ph .pic.a{background:linear-gradient(180deg,#cfe8b5,#f0dc92)}
-.ph .pic.b{background:linear-gradient(180deg,#c9d3ee,#d9c9b4)}
-.ph .pic.c{background:linear-gradient(180deg,#a9bdea,#f6c3a0)}
-.ph .cap{padding:8px 11px;font-size:12.5px;font-weight:700}
-.ph .cap span{display:block;font-size:10.8px;color:var(--muted);font-weight:400}
-.ai{background:var(--lake);border-radius:12px;padding:14px 16px;margin-bottom:14px;font-size:13px}
-.ai b{color:var(--dusk);font-size:11px;display:block;margin-bottom:4px}
+.ph{border:2px solid var(--line);border-radius:16px;overflow:hidden;cursor:pointer;background:#fff;text-align:left;font-family:inherit;padding:0}
+.ph:hover{border-color:var(--brand)}
+.ph.sel{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+.ph .pic{height:84px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:34px}
+.ph .cap{padding:9px 12px;font-size:13px;font-weight:800}
+.ai{background:var(--brand-soft);border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:13px}
+.ai b{color:var(--brand);font-size:11px;display:block;margin-bottom:2px}
 .field{margin-bottom:12px}
-.field label{display:block;font-size:11.5px;font-weight:700;color:var(--muted);margin-bottom:4px}
-.field input{width:100%;font:inherit;font-size:13.5px;padding:10px 12px;border:1.5px solid var(--line);border-radius:8px}
-.field input:focus{outline:none;border-color:var(--sun)}
-.field input.right{border-color:var(--ok);background:var(--ok-l)}
+.field label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:4px}
+.field input{width:100%;font:inherit;font-size:14px;padding:11px 13px;border:1.5px solid var(--line);border-radius:10px}
+.field input:focus{outline:none;border-color:var(--brand)}
+.field input.right{border-color:#16a34a;background:#f0fdf4}
 .row-btn{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:18px;flex-wrap:wrap}
-.row-btn .btn{padding:11px 20px;font-size:14px}
-.opt{display:block;width:100%;text-align:left;font:inherit;font-size:13.5px;padding:11px 14px;border:1.5px solid var(--line);border-radius:10px;background:#fff;margin-bottom:8px;cursor:pointer}
-.opt:hover:not(:disabled){border-color:var(--sun)}
-.opt.ok{border-color:var(--ok);background:var(--ok-l);color:var(--ok);font-weight:700}
+.row-btn .pill{padding:11px 22px;font-size:14px}
+.row-btn .pill:disabled{opacity:.4;cursor:default}
+.opt{display:block;width:100%;text-align:left;font:inherit;font-size:14px;padding:12px 15px;border:1.5px solid var(--line);border-radius:12px;background:#fff;margin-bottom:8px;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--brand)}
+.opt.ok{border-color:#16a34a;background:#f0fdf4;color:#16a34a;font-weight:800}
 .opt.ng{border-color:#dc2626;background:#fef2f2;color:#dc2626}
-.exp{display:none;background:var(--sun-l);border-radius:10px;padding:12px 14px;font-size:12.8px;margin-top:6px;line-height:1.85}.exp.on{display:block}
+.exp{display:none;background:var(--brand-soft);border-radius:12px;padding:12px 14px;font-size:13px;margin-top:6px;line-height:1.85}.exp.on{display:block}
 .dash{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
-.dash div{background:var(--paper);border-radius:10px;padding:12px;text-align:center}
-.dash b{display:block;font-size:22px;color:var(--navy)}.dash span{font-size:11px;color:var(--muted)}
-.exp-bar{height:12px;background:#eee8dd;border-radius:8px;overflow:hidden;margin:8px 0 4px}
-.exp-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--sun));transition:width .5s}
-.demo-note{text-align:center;font-size:11.5px;color:#aab0d4;margin-top:14px}
-
-/* teacher dash */
-.two{display:grid;grid-template-columns:1fr;gap:30px;align-items:center}
-@media(min-width:900px){.two{grid-template-columns:1fr 1fr}}
-.tlist{list-style:none}
-.tlist li{padding:11px 0 11px 28px;border-top:1px solid var(--line);position:relative;font-size:14px}
-.tlist li:first-child{border:none}
-.tlist li::before{content:'✓';position:absolute;left:3px;color:var(--ok);font-weight:800}
-.tlist b{color:var(--navy)}
-.tdash{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 24px 44px -26px rgba(20,23,60,.35)}
-.tdash h4{font-size:13px;font-weight:800;margin-bottom:10px}
-.bar-row{display:flex;align-items:center;gap:10px;font-size:11.5px;color:var(--muted);margin-top:8px}
-.bar-row em{font-style:normal;flex:0 0 100px}
-.bar-row span{flex:1;height:8px;background:#eee8dd;border-radius:6px;overflow:hidden}
-.bar-row span i{display:block;height:100%;background:var(--dusk);border-radius:6px}
-.bar-row b{flex:0 0 28px;text-align:right;color:var(--text)}
-
-/* general */
-.gen{background:var(--lake);border-radius:18px;padding:30px 28px;max-width:860px;margin:0 auto}
-.gen h3{font-size:18px;font-weight:800;margin-bottom:8px}
-.gen p{font-size:14px;line-height:1.95}
-.gen ul{list-style:none;margin-top:12px;display:grid;grid-template-columns:1fr;gap:6px}
-@media(min-width:640px){.gen ul{grid-template-columns:1fr 1fr}}
-.gen li{font-size:13.5px;padding-left:22px;position:relative}
-.gen li::before{content:'●';position:absolute;left:2px;color:var(--sun);font-size:10px;top:5px}
-
-/* flow */
-.flow{display:grid;grid-template-columns:1fr;gap:14px}
-@media(min-width:820px){.flow{grid-template-columns:repeat(3,1fr)}}
-.fstep{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px}
-.fstep .n{display:inline-flex;width:32px;height:32px;border-radius:50%;background:var(--sun);color:#fff;font-weight:800;align-items:center;justify-content:center;font-size:13px;margin-bottom:8px}
-.fstep h3{font-size:15.5px;font-weight:800;margin-bottom:4px}
-.fstep p{font-size:13px;color:#4a4752;line-height:1.9}
-
-/* cta + footer */
-.cta{background:var(--navy-d);color:#fff;text-align:center}
-.cta p{color:#c3c9db;font-size:14.5px;margin:12px auto 24px;max-width:560px;line-height:1.95}
-.ft{background:#0d1230;color:#9aa3bb;padding:36px 0 22px;font-size:12.5px}
-.ft-in{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between}
-.ft a{display:block;text-decoration:none;padding:3px 0}.ft a:hover{color:var(--gold)}
-.ft-copy{margin-top:22px;padding-top:16px;border-top:1px solid rgba(255,255,255,.12);text-align:center;font-size:11.5px;line-height:1.9}
+.dash div{background:var(--soft);border-radius:14px;padding:14px;text-align:center}
+.dash b{display:block;font-size:26px;font-weight:900;color:var(--brand)}.dash span{font-size:11.5px;color:var(--muted)}
+.exp-bar{height:12px;background:#eceef4;border-radius:8px;overflow:hidden;margin:8px 0 4px}
+.exp-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--yellow),var(--brand));transition:width .5s}
+.dnote{text-align:center;font-size:12px;color:#9aa3bb;margin-top:16px}
 </style>
 </head>
-<body>
+<body class="t-kp">
 
-<header class="hd">
-  <div class="hd-in">
-    <a href="#" class="logo"><span class="dots"><i></i><i></i><i></i><i></i></span>検定パレット</a>
-    <a href="../" class="by">by ソトマナ</a>
-    <nav class="nav">
-      <a href="#what">サービス内容</a>
-      <a href="#scenes">使える場面</a>
-      <a href="#teacher">先生の方へ</a>
-      <a href="#curriculum">学習指導要領との関係</a>
-      <a href="#demo">デモ体験</a>
-    </nav>
-    <a href="#contact" class="btn btn-sun">導入のご相談</a>
+<header class="hd"><div class="hd-in">
+  <a href="#" class="logo"><span class="hex-m" style="background:conic-gradient(#ff6a3a 0 33%,#f6c21c 0 66%,#f4849c 0)"></span>検定パレット<span class="by">by ソトマナ</span></a>
+  <nav class="nav"><a href="#what">サービス</a><a href="#scenes">使える場面</a><a href="#teacher">先生の方へ</a><a href="#demo">デモ</a></nav>
+  <a href="#contact" class="pill solid">導入のご相談</a>
+</div></header>
+
+<section class="hero kp"><div class="wrap"><div class="hero-grid">
+  <div>
+    <p class="lbl">体験から、自分で検定をつくる</p>
+    <h1 class="h-xl">外に出て、<br>撮って、<br><span class="hl">つくる。</span></h1>
+    <p class="sub">子どもが自由に問題をつくれる、学習サービス。</p>
+    <div class="btns"><a href="#demo" class="pill solid big">デモを体験</a><a href="#contact" class="pill big">導入のご相談</a></div>
   </div>
-</header>
+  <div class="mosaic" aria-hidden="true"><div class="hx" style="left:0.0%;top:19.12%;--c:#ff6a3a"><span data-i="camera"></span></div><div class="hx photo" style="left:0.0%;top:57.35%;--c:#f6c21c" data-img="../images/kp-hero-1.jpg"><span class="ico-ph">写真</span></div><div class="hx photo" style="left:22.5%;top:0.0%;--c:#35c1c1" data-img="../images/kp-hero-2.jpg"><span class="ico-ph">写真</span></div><div class="hx" style="left:22.5%;top:38.24%;--c:#f4849c"><span data-i="leaf"></span></div><div class="hx" style="left:45.0%;top:19.12%;--c:#7a5cf0"><span data-i="pencil"></span></div><div class="hx photo" style="left:45.0%;top:57.35%;--c:#ff6a3a" data-img="../images/kp-hero-3.jpg"><span class="ico-ph">写真</span></div><div class="hx" style="left:67.5%;top:0.0%;--c:#2b3fb8"><span data-i="factory"></span></div><div class="hx photo" style="left:67.5%;top:38.24%;--c:#f6c21c" data-img="../images/kp-hero-4.jpg"><span class="ico-ph">写真</span></div></div>
+</div></div></section>
 
-<!-- HERO -->
-<section class="hero" style="padding-bottom:0">
-  <div class="sun"></div>
-  <div class="container">
-    <div class="hero-grid">
-      <div>
-        <div class="badge">📷 体験から問題をつくる学習サービス</div>
-        <h1>外に出て、写真を撮って、<br><em>自分で問題をつくる。</em></h1>
-        <p class="def"><b>検定パレット</b>は、子どもが自分で撮った写真から、自由に検定問題をつくれるサービスです。つくった問題は友達と出し合えます。「好き」を育み、「得意」を伸ばす、いろいろな学び方を支えます。</p>
-        <div class="ctas">
-          <a href="#demo" class="btn btn-sun">デモを体験する →</a>
-          <a href="#contact" class="btn btn-ghost">導入のご相談</a>
-        </div>
+<section id="what"><div class="wrap">
+  <div class="eyebrow">What is 検定パレット?</div>
+  <h2 class="h-l">写真から、<span class="hl">自分だけの検定</span>を。</h2>
+  <div class="what">
+    <div>
+      <p class="big">外で撮った写真から、子どもが自分で問題をつくり、友達と出し合えます。</p>
+      <div class="btns"><a href="#demo" class="pill solid">デモを体験</a></div>
+    </div>
+    <div class="stage" style="--stage:#ff6a3a"><div class="combo"><div class="laptop"><div class="screen"><div class="slot" data-img="../images/kp-laptop.png"><div class="wire"><div class="tb"></div><div class="row"><i></i><i></i><i></i></div><div class="bx">PC画面<br>1600×1000<br><span style="font-weight:500;font-size:10px">kp-laptop.png</span></div></div></div></div></div><div class="phone-w"><div class="phone"><div class="slot" data-img="../images/kp-phone.png"><div class="wire"><div class="tb"></div><div class="bx">スマホ画面<br>900×1850<br><span style="font-weight:500;font-size:10px">kp-phone.png</span></div></div></div></div></div></div></div>
+  </div>
+  <div class="steps3">
+    <div class="st"><div class="hexi" style="--c:#ff6a3a" data-i="camera"></div><small>STEP 1</small><h3>外で撮る</h3><p>気になったものを写真に。</p></div>
+    <div class="st"><div class="hexi" style="--c:#7a5cf0" data-i="pencil"></div><small>STEP 2</small><h3>問題をつくる</h3><p>AIの下書きを、自分で直す。</p></div>
+    <div class="st"><div class="hexi" style="--c:#35c1c1" data-i="trophy"></div><small>STEP 3</small><h3>出し合う</h3><p>友達の検定に挑戦。</p></div>
+  </div>
+</div></section>
+
+<section class="soft" id="scenes"><div class="wrap">
+  <div class="eyebrow">Use cases</div>
+  <h2 class="h-l">こんな場面で</h2>
+  <div class="scenes">
+    <div class="sc"><div class="slot" data-img="../images/kp-scene-tankyu.jpg" style="--c:#7a5cf0" data-i="spark"></div><b>総合的な探究の時間</b></div>
+    <div class="sc"><div class="slot" data-img="../images/kp-scene-industry.jpg" style="--c:#2b3fb8" data-i="factory"></div><b>産業教育</b></div>
+    <div class="sc"><div class="slot" data-img="../images/kp-scene-nature.jpg" style="--c:#35c1c1" data-i="leaf"></div><b>自然体験</b></div>
+    <div class="sc"><div class="slot" data-img="../images/kp-scene-town.jpg" style="--c:#f4849c" data-i="pin"></div><b>地域学習<small>家庭・施設でも</small></b></div>
+  </div>
+</div></section>
+
+<section id="teacher"><div class="wrap">
+  <div class="eyebrow">For teachers</div>
+  <h2 class="h-l">先生は、見守る役に。</h2>
+  <div class="frow">
+    <div class="ft-img"><div class="stage" style="--stage:#16213a"><div class="laptop"><div class="screen"><div class="slot" data-img="../images/kp-teacher.png"><div class="wire"><div class="tb"></div><div class="row"><i></i><i></i><i></i></div><div class="bx">先生用画面<br>1600×1000<br><span style="font-weight:500;font-size:10px">kp-teacher.png</span></div></div></div></div></div></div></div>
+    <div>
+      <div class="num">POINT 01</div><h3>準備はほとんど要りません。</h3><p>問題は、子どもがつくります。</p>
+      <div class="num" style="margin-top:28px">POINT 02</div><h3>AIが下書きを手伝います。</h3><p>仕上げるのは、子ども自身。</p>
+      <div class="num" style="margin-top:28px">POINT 03</div><h3>学びの過程が見えます。</h3><p>写真の数、書き直しの回数を記録。</p>
+    </div>
+  </div>
+</div></section>
+
+<section class="soft" id="curriculum"><div class="wrap">
+  <div class="eyebrow">Curriculum</div>
+  <h2 class="h-l">次期学習指導要領の<br class="sp">ねらいとつながる</h2>
+  <div class="chips">
+    <div class="chip" data-i="spark">自分の問いから始める探究</div>
+    <div class="chip" data-i="target">「好き」「得意」を伸ばす</div>
+    <div class="chip" data-i="people">対話と協働</div>
+    <div class="chip" data-i="leaf">体験活動の充実</div>
+    <div class="chip" data-i="pencil">AIは下書きまで</div>
+    <div class="chip" data-i="chart">過程を見る評価</div>
+  </div>
+  <p class="note-s">※ 中央教育審議会「審議まとめ」（令和8年10月5日）を参考にまとめています。最終内容は今後確定します。</p>
+</div></section>
+
+<section class="demo" id="demo"><div class="wrap">
+  <div class="eyebrow" style="color:#fff">Demo</div>
+  <h2 class="h-l">3分で体験</h2>
+  <p class="lead" style="color:#aab0d4">写真を選んで、問題をつくって、解いてみる。（保存はされません）</p>
+  <div class="dbox">
+    <div class="tabs"><div class="tab on">① 写真</div><div class="tab">② つくる</div><div class="tab">③ 挑戦</div><div class="tab">④ ふりかえり</div></div>
+    <div class="pane on">
+      <h3>外で撮った写真を、1枚えらぼう</h3>
+      <div class="photos">
+        <button class="ph" data-k="rice"><div class="pic" style="background:#35c1c1" data-i="leaf"></div><div class="cap">田んぼ</div></button>
+        <button class="ph" data-k="factory"><div class="pic" style="background:#2b3fb8" data-i="factory"></div><div class="cap">町工場</div></button>
+        <button class="ph" data-k="castle"><div class="pic" style="background:#f4849c" data-i="pin"></div><div class="cap">お城</div></button>
       </div>
-      <div class="stack" aria-hidden="true">
-        <div class="q-note">子どもがつくった問題</div>
-        <div class="q-card">
-          <div class="q-photo"><span>📍 田んぼ</span><span>9月</span></div>
-          <div class="q-by">つくった人：5年1組 ひなたさん</div>
-          <div class="q-q">イネの実の、いちばん外側のかたいからを何という？</div>
-          <div class="q-c ok">✓ もみがら（籾殻）</div>
-          <div class="q-c">わら</div>
-          <div class="q-c">なえ</div>
-        </div>
-      </div>
+      <div class="row-btn"><span style="font-size:12px;color:var(--muted)">※ デモ用のイメージです</span><button class="pill solid" id="to1" disabled>つくる</button></div>
     </div>
-    <div class="water"></div>
-  </div>
-  <div class="container"><div class="strip">
-    <div><b>① 外で撮る</b><span>気になったものを写真に</span></div>
-    <div><b>② 問題をつくる</b><span>AIの下書きを自分で直す</span></div>
-    <div><b>③ 出し合う</b><span>友達の検定に挑戦</span></div>
-  </div></div>
-</section>
-
-<!-- WHAT -->
-<section id="what">
-  <div class="container">
-    <div class="sec-head">
-      <div class="sec-en">About</div>
-      <h2 class="sec-title">検定パレットは、<span class="hl">こんなサービス</span>です</h2>
-      <p class="sec-lead">外での体験を、そのまま問題づくりにつなげます。難しい準備は必要ありません。</p>
+    <div class="pane">
+      <h3>AIの下書きを、自分の言葉に直そう</h3>
+      <div class="ai"><b>AIの下書き</b><span id="aiNote"></span></div>
+      <div class="field"><label>問題文</label><input id="fq"></div>
+      <div class="field"><label>正しい答え</label><input id="fa" class="right"></div>
+      <div class="field"><label>まちがいの選択肢 ①</label><input id="fw1"></div>
+      <div class="field"><label>まちがいの選択肢 ②</label><input id="fw2"></div>
+      <div class="field"><label>解説</label><input id="fe"></div>
+      <div class="row-btn"><button class="pill nochev" id="back0">もどる</button><button class="pill solid" id="to2">公開して挑戦</button></div>
     </div>
-    <div class="steps">
-      <div class="step"><div class="ico">📷</div><div class="n">STEP 1</div><h3>外に出て、写真を撮る</h3><p>田んぼ、町工場、川、お店、お城など。気になったもの、不思議に思ったものを、タブレットやスマホで撮ります。</p></div>
-      <div class="step"><div class="ico">✏️</div><div class="n">STEP 2</div><h3>自分で問題をつくる</h3><p>写真を見て、問題文と選択肢、解説を考えます。AIが下書きを出すので、書き方に迷っても進められます。仕上げは自分の言葉で。</p></div>
-      <div class="step"><div class="ico">🏆</div><div class="n">STEP 3</div><h3>友達と出し合う</h3><p>できた問題は「検定」としてまとめられます。友達の検定に挑戦して、感想や気づきを伝え合えます。</p></div>
+    <div class="pane">
+      <h3>友達の検定に挑戦</h3>
+      <div id="qText" style="font-weight:800;font-size:16px;margin-bottom:12px"></div>
+      <div id="qOpts"></div><div class="exp" id="qExp"></div>
+      <div class="row-btn"><span></span><button class="pill solid" id="to3" style="display:none">ふりかえり</button></div>
     </div>
-    <div class="callout">問題を「解く」だけでなく、<b>自分で「つくる」</b>ところに、検定パレットの特長があります。<br>つくるときに、子どもは自然に「なぜ？」「どう聞けば伝わる？」と考えます。</div>
-  </div>
-</section>
-
-<!-- SCENES -->
-<section class="bg-paper" id="scenes">
-  <div class="container">
-    <div class="sec-head">
-      <div class="sec-en">Use cases</div>
-      <h2 class="sec-title">こんな授業・活動で使えます</h2>
-      <p class="sec-lead">「外に出る」活動があれば、教科や場面を選びません。</p>
-    </div>
-    <div class="scenes">
-      <div class="scene"><div class="e">🔍</div><div><h3>総合的な探究の時間</h3><p>自分の「好き」や「気になる」から課題を見つけるマイ探究の入口に。班でテーマを決めて、共通の検定をつくることもできます。</p><div class="ex">例：地域の商店街を歩き、気になったお店の写真から問題をつくる</div></div></div>
-      <div class="scene"><div class="e">🏭</div><div><h3>産業教育・キャリア教育</h3><p>工場、農家、お店などの見学で撮った写真から、仕事の仕組みや道具に関する問題をつくります。学んだことの整理にも。</p><div class="ex">例：町工場の見学で、機械や製品の名前と使い方の問題をつくる</div></div></div>
-      <div class="scene"><div class="e">🌿</div><div><h3>自然体験・校外学習</h3><p>川、森、畑、海での観察を、写真と問題で記録します。「見つけた」「不思議だった」が、そのまま学びの記録になります。</p><div class="ex">例：川で見つけた生き物の写真から、見分け方の問題をつくる</div></div></div>
-      <div class="scene"><div class="e">🗺️</div><div><h3>地域学習・社会科見学</h3><p>お城、神社、博物館、資料館など。見学先の写真から、見学のふりかえり問題をつくり、クラスで出し合います。</p><div class="ex">例：見学した城の写真から、建物の特徴を問う問題をつくる</div></div></div>
+    <div class="pane">
+      <h3>今回の学びの記録</h3>
+      <div class="dash"><div><b>1</b><span>撮った写真</span></div><div><b id="dEdit">0</b><span>書き直した箇所</span></div><div><b>1</b><span>挑戦した検定</span></div></div>
+      <div style="font-size:13px;font-weight:800">EXP</div>
+      <div class="exp-bar"><i id="expBar"></i></div>
+      <div style="font-size:12px;color:var(--muted)" id="expTxt"></div>
+      <div class="row-btn"><button class="pill nochev" id="again">もう一度</button><a href="#teacher" class="pill solid">先生用画面</a></div>
     </div>
   </div>
-</section>
+  <p class="dnote">デモ用の例題です。実際の検定は、子どもたちがつくった問題で構成されます。</p>
+</div></section>
 
-<!-- TEACHER -->
-<section id="teacher">
-  <div class="container">
-    <div class="two">
-      <div>
-        <div class="sec-en">For teachers</div>
-        <h2 class="sec-title" style="text-align:left">先生にとってのメリット</h2>
-        <ul class="tlist" style="margin-top:16px">
-          <li><b>準備がほとんど要らない。</b>先生が問題を用意する必要はありません。</li>
-          <li><b>AIが下書きを手伝う。</b>子どもが書き方に迷ったときの助けになります。</li>
-          <li><b>学びの過程が見える。</b>撮った写真の数や書き直した回数が、先生用画面に記録されます。</li>
-          <li><b>得意・不得意がちがっても参加できる。</b>写真で表現する、文章で書く、友達に説明するなど、いろいろな入口があります。</li>
-        </ul>
-      </div>
-      <div class="tdash" aria-hidden="true">
-        <h4>先生用画面 <span style="font-weight:400;color:var(--muted)">（イメージ）</span></h4>
-        <div class="bar-row"><em>撮った写真</em><span><i style="width:72%"></i></span><b>86</b></div>
-        <div class="bar-row"><em>書き直した回数</em><span><i style="width:55%"></i></span><b>41</b></div>
-        <div class="bar-row"><em>友達の検定に挑戦</em><span><i style="width:64%"></i></span><b>57</b></div>
-        <div class="bar-row"><em>つくった問題</em><span><i style="width:38%"></i></span><b>24</b></div>
-        <div style="margin-top:14px;font-size:11.5px;color:var(--muted);background:var(--paper);border-radius:10px;padding:10px 12px">💡 4班は書き直しが多く、問いを深めているようです。声をかけてみましょう。</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CURRICULUM -->
-<section class="bg-paper" id="curriculum">
-  <div class="container">
-    <div class="sec-head">
-      <div class="sec-en">Curriculum</div>
-      <h2 class="sec-title">次期学習指導要領のねらいと、検定パレット</h2>
-      <p class="sec-lead">2026年10月の中央教育審議会「審議まとめ」で示された方向性と、検定パレットで取り組めることを対応させました。</p>
-    </div>
-    <table class="tbl">
-      <thead><tr><th>示されている方向性</th><th>検定パレットでできること</th></tr></thead>
-      <tbody>
-        <tr><td>自分の問いや好奇心を原動力にする探究（マイ探究）</td><td>子ども自身が撮った写真から、自分で問題をつくります。「気になる」を出発点にできます。</td></tr>
-        <tr><td>「好き」を育み、「得意」を伸ばす</td><td>写真、文章、説明など、得意な入口から参加できます。つくる問題の内容も自由です。</td></tr>
-        <tr><td>学びの主体的な調整、他者との対話や協働</td><td>問題を自分で書き直し、友達と検定を出し合います。感想の交換もできます。</td></tr>
-        <tr><td>体験活動の充実</td><td>校外学習や見学など、教室の外での体験と、そのふりかえりをつなげます。</td></tr>
-        <tr><td>生成AIは、子どもの思考を代替しない使い方に</td><td>AIは下書きまで。選択肢や解説を考えて仕上げるのは子どもです。</td></tr>
-        <tr><td>学習の途中での評価（形成的評価）</td><td>写真の数、書き直しの回数、挑戦した回数などを、声かけの手がかりとして確認できます。</td></tr>
-      </tbody>
-    </table>
-    <p class="small">※ 上記は審議まとめ（令和8年10月5日）の記述を参考に、ソトマナがまとめたものです。最終的な学習指導要領の内容は、今後の答申・告示で確定します。</p>
+<section class="band" id="contact"><div class="hxb" style="left:-60px;top:-40px"></div><div class="hxb" style="right:-50px;bottom:-60px"></div>
+  <div class="wrap" style="position:relative">
+    <h2>まずは1クラスから。</h2>
+    <p>学校・団体での導入や体験授業のご相談をお待ちしています。</p>
+    <div class="btns"><a class="pill white big" href="mailto:contact@example.com?subject=検定パレットについてのお問い合わせ">お問い合わせ</a><a class="pill ghost big" href="#demo">デモを体験</a></div>
   </div>
 </section>
 
-<!-- DEMO -->
-<section class="demo" id="demo">
-  <div class="container">
-    <div class="sec-head">
-      <div class="sec-en">Demo</div>
-      <h2 class="sec-title">3分で体験：写真から問題をつくって、解いてみる</h2>
-      <p class="sec-lead">写真を選んで、問題をつくり、挑戦するまでの流れを体験できます。入力内容は保存されません。</p>
-    </div>
-    <div class="demo-box">
-      <div class="tabs">
-        <div class="tab on">① 写真を選ぶ</div><div class="tab">② 問題をつくる</div><div class="tab">③ 挑戦する</div><div class="tab">④ ふりかえる</div>
-      </div>
-
-      <div class="pane on" data-p="0">
-        <h3>外で撮った写真から、1枚えらぼう</h3>
-        <p class="hint">気になった写真が、問題づくりのはじまりです。</p>
-        <div class="photos">
-          <button class="ph" data-k="rice"><div class="pic a">🌾</div><div class="cap">田んぼのイネ<span>自然・農業</span></div></button>
-          <button class="ph" data-k="factory"><div class="pic b">🏭</div><div class="cap">町工場の機械<span>産業・ものづくり</span></div></button>
-          <button class="ph" data-k="castle"><div class="pic c">🏯</div><div class="cap">お城の天守<span>地域・歴史</span></div></button>
-        </div>
-        <div class="row-btn"><span style="font-size:12px;color:var(--muted)">※ デモ用のイメージです</span><button class="btn btn-navy" id="to1" disabled>この写真で問題をつくる →</button></div>
-      </div>
-
-      <div class="pane" data-p="1">
-        <h3>AIの下書きを、自分の言葉に直そう</h3>
-        <p class="hint">下書きはそのままでも、書きかえてもOK。自分の言葉に直すほど、考えが深まります。</p>
-        <div class="ai"><b>🤖 AIの下書き</b><span id="aiNote"></span></div>
-        <div class="field"><label>問題文</label><input id="fq"></div>
-        <div class="field"><label>正しい答え</label><input id="fa" class="right"></div>
-        <div class="field"><label>まちがいの選択肢 ①</label><input id="fw1"></div>
-        <div class="field"><label>まちがいの選択肢 ②</label><input id="fw2"></div>
-        <div class="field"><label>解説（なぜそうなる？）</label><input id="fe"></div>
-        <div class="row-btn"><button class="btn btn-line" id="back0">← もどる</button><button class="btn btn-sun" id="to2">検定に公開して挑戦 →</button></div>
-      </div>
-
-      <div class="pane" data-p="2">
-        <h3>友達がつくった検定に挑戦</h3>
-        <p class="hint">デモでは、いまつくった問題に挑戦します。</p>
-        <div id="qText" style="font-weight:700;font-size:15px;margin-bottom:12px"></div>
-        <div id="qOpts"></div>
-        <div class="exp" id="qExp"></div>
-        <div class="row-btn"><span></span><button class="btn btn-navy" id="to3" style="display:none">ふりかえりへ →</button></div>
-      </div>
-
-      <div class="pane" data-p="3">
-        <h3>今回の学びの記録</h3>
-        <p class="hint">点数だけでなく、学びの過程が記録されます。</p>
-        <div class="dash">
-          <div><b>1</b><span>撮った写真</span></div>
-          <div><b id="dEdit">0</b><span>書き直した箇所</span></div>
-          <div><b>1</b><span>挑戦した検定</span></div>
-        </div>
-        <div style="font-size:12.5px;font-weight:700">EXP（経験値）</div>
-        <div class="exp-bar"><i id="expBar"></i></div>
-        <div style="font-size:12px;color:var(--muted)" id="expTxt"></div>
-        <div class="row-btn"><button class="btn btn-line" id="again">もう一度体験する</button><a href="#teacher" class="btn btn-navy">先生用画面を見る →</a></div>
-      </div>
-    </div>
-    <p class="demo-note">デモ用の例題です。実際の検定は、子どもたちが自分でつくった問題で構成されます。</p>
+<footer class="ft"><div class="wrap">
+  <div class="row">
+    <div><a href="#" class="logo">検定パレット</a><p style="margin-top:8px">体験から、自分で検定をつくる。</p></div>
+    <div><h4>サービス</h4><a href="#what">サービス</a><a href="#scenes">使える場面</a><a href="#demo">デモ</a></div>
+    <div><h4>ソトマナ</h4><a href="../">会社トップ</a><a href="../chariken/">ちゃり検</a></div>
   </div>
-</section>
-
-<!-- GENERAL -->
-<section>
-  <div class="container">
-    <div class="sec-head"><div class="sec-en">Beyond school</div><h2 class="sec-title">学校だけでなく、いろいろな場所で</h2></div>
-    <div class="gen">
-      <h3>おでかけが、そのまま学びになります</h3>
-      <p>写真を撮って問題をつくる、という使い方は、学校の外でも同じです。まずは学校教育から。そのあと、地域や家庭にも広げていきます。</p>
-      <ul>
-        <li>家族での休日のおでかけ・自由研究</li>
-        <li>学習塾・プログラミング教室・フリースクール</li>
-        <li>博物館・資料館・動物園などの社会教育施設</li>
-        <li>観光地・地域イベントでのクイズラリー</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<!-- FLOW -->
-<section class="bg-paper">
-  <div class="container">
-    <div class="sec-head"><div class="sec-en">Getting started</div><h2 class="sec-title">導入は、小さく始められます</h2><p class="sec-lead">まずは1クラス、1回の活動からお試しください。</p></div>
-    <div class="flow">
-      <div class="fstep"><div class="n">1</div><h3>ご相談</h3><p>授業のねらいや、実施したい場面をお聞きします。</p></div>
-      <div class="fstep"><div class="n">2</div><h3>体験活動で使ってみる</h3><p>見学や校外学習で写真を撮り、その場や教室で問題をつくります。</p></div>
-      <div class="fstep"><div class="n">3</div><h3>ふりかえり・改善</h3><p>先生用画面の記録と、子どもたちの声をもとに、次の活動に活かします。</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="cta" id="contact">
-  <div class="container" style="text-align:center">
-    <h2 class="sec-title">導入のご相談・資料請求</h2>
-    <p>学校や団体での導入、体験授業のご相談など、お気軽にお問い合わせください。</p>
-    <a href="mailto:contact@example.com?subject=検定パレットについてのお問い合わせ" class="btn btn-sun">お問い合わせ →</a>
-  </div>
-</section>
-
-<footer class="ft">
-  <div class="container">
-    <div class="ft-in">
-      <div><b style="color:#fff;font-size:16px">検定パレット</b><p style="margin-top:6px">体験から、自分で検定をつくるサービス</p></div>
-      <div><a href="#what">サービス内容</a><a href="#scenes">使える場面</a><a href="#curriculum">学習指導要領との関係</a></div>
-      <div><a href="../">運営会社 ソトマナ</a><a href="../chariken/">ちゃり検</a></div>
-    </div>
-    <div class="ft-copy">© 2026 ソトマナ ／ ※ 架空の企業サイトです（U☆PoC 学生コンペ向け）</div>
-  </div>
-</footer>
-
+  <div class="cp">© 2026 ソトマナ　※ 架空の企業サイトです（U☆PoC 学生コンペ向け）</div>
+</div></footer>
 <script>
 (function(){
   var DATA={
-    rice:{note:'写真にイネの穂が写っています。「お米は、どんな形で実るの？」という問いはどうでしょう。',
-      q:'イネの実の、いちばん外側のかたいからを何という？',a:'もみがら（籾殻）',w1:'わら',w2:'なえ',e:'イネの実は「もみ」といい、外側のからが「もみがら」です。もみがらを取ると「玄米」になります。'},
-    factory:{note:'写真に、材料を回して削る機械が写っています。「この機械は何をするの？」という問いはどうでしょう。',
-      q:'材料を回しながら刃物を当てて、丸い形に削る機械はどれ？',a:'旋盤（せんばん）',w1:'ボール盤',w2:'プレス機',e:'旋盤は、材料を回転させて刃物を当て、丸く削る機械です。ボール盤は穴をあける機械、プレス機は金属を押して形をつくる機械です。'},
-    castle:{note:'写真は、黒くて重厚な外観の天守です。「いつ建てられたの？」という問いはどうでしょう。',
-      q:'松江城の天守の特徴は？',a:'江戸時代から残る「現存天守」',w1:'昭和に鉄筋コンクリートで建てられた',w2:'天守が3つ並んでいる',e:'松江城の天守は、江戸時代に建てられたものが今も残る「現存天守」のひとつで、国宝に指定されています。'}
+    rice:{note:'写真にイネの穂が写っています。「お米はどんな形で実る？」はどうでしょう。',q:'イネの実の、いちばん外側のかたいからを何という？',a:'もみがら（籾殻）',w1:'わら',w2:'なえ',e:'イネの実は「もみ」といい、外側のからが「もみがら」です。もみがらを取ると「玄米」になります。'},
+    factory:{note:'写真に、材料を回して削る機械が写っています。「この機械は何をするの？」はどうでしょう。',q:'材料を回しながら刃物を当てて、丸く削る機械はどれ？',a:'旋盤（せんばん）',w1:'ボール盤',w2:'プレス機',e:'旋盤は、材料を回転させて刃物を当て、丸く削る機械です。ボール盤は穴あけ、プレス機は金属を押して形をつくる機械です。'},
+    castle:{note:'写真は、黒くて重厚な天守です。「いつ建てられたの？」はどうでしょう。',q:'松江城の天守の特徴は？',a:'江戸時代から残る「現存天守」',w1:'昭和に鉄筋コンクリートで建てられた',w2:'天守が3つ並んでいる',e:'松江城の天守は、江戸時代に建てられたものが今も残る「現存天守」のひとつで、国宝に指定されています。'}
   };
   var sel=null,edits=0,ok=false;
   var $=function(s){return document.querySelector(s)},$$=function(s){return [].slice.call(document.querySelectorAll(s))};
   function go(n){$$('.tab').forEach(function(t,i){t.classList.toggle('on',i===n)});$$('.pane').forEach(function(p,i){p.classList.toggle('on',i===n)})}
   $$('.ph').forEach(function(b){b.addEventListener('click',function(){$$('.ph').forEach(function(x){x.classList.remove('sel')});b.classList.add('sel');sel=b.dataset.k;$('#to1').disabled=false})});
-  $('#to1').addEventListener('click',function(){
-    var d=DATA[sel];$('#aiNote').textContent=d.note;
-    [['fq','q'],['fa','a'],['fw1','w1'],['fw2','w2'],['fe','e']].forEach(function(p){var el=document.getElementById(p[0]);el.value=d[p[1]];el.dataset.orig=d[p[1]]});
-    go(1);
-  });
+  $('#to1').addEventListener('click',function(){var d=DATA[sel];$('#aiNote').textContent=d.note;
+    [['fq','q'],['fa','a'],['fw1','w1'],['fw2','w2'],['fe','e']].forEach(function(p){var el=document.getElementById(p[0]);el.value=d[p[1]];el.dataset.orig=d[p[1]]});go(1)});
   $('#back0').addEventListener('click',function(){go(0)});
   $('#to2').addEventListener('click',function(){
     edits=0;['fq','fa','fw1','fw2','fe'].forEach(function(id){var el=document.getElementById(id);if(el.value!==el.dataset.orig)edits++});
@@ -463,23 +204,15 @@ section{padding:80px 0}
     for(var i=opts.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=opts[i];opts[i]=opts[j];opts[j]=t}
     var box=$('#qOpts');box.innerHTML='';$('#qExp').classList.remove('on');$('#to3').style.display='none';
     opts.forEach(function(o){var b=document.createElement('button');b.className='opt';b.textContent=o.t;
-      b.addEventListener('click',function(){
-        $$('#qOpts .opt').forEach(function(x){x.disabled=true});
-        b.classList.add(o.ok?'ok':'ng');
+      b.addEventListener('click',function(){$$('#qOpts .opt').forEach(function(x){x.disabled=true});b.classList.add(o.ok?'ok':'ng');
         if(!o.ok)$$('#qOpts .opt').forEach(function(x){if(x.textContent===m.a)x.classList.add('ok')});
-        $('#qExp').textContent=(o.ok?'⭕ 正解！ ':'❌ おしい！ ')+m.e;$('#qExp').classList.add('on');
-        ok=o.ok;$('#to3').style.display='inline-flex';
-      });box.appendChild(b)});
-    go(2);
-  });
-  $('#to3').addEventListener('click',function(){
-    $('#dEdit').textContent=edits;
-    var exp=30+edits*10+(ok?20:5);
-    $('#expTxt').textContent='+'+exp+' EXP（写真を撮る・書き直す・挑戦するたびにたまります）';
-    go(3);setTimeout(function(){$('#expBar').style.width=Math.min(100,exp)+'%'},60);
-  });
+        $('#qExp').textContent=(o.ok?'⭕ 正解！ ':'❌ おしい！ ')+m.e;$('#qExp').classList.add('on');ok=o.ok;$('#to3').style.display='inline-flex'});box.appendChild(b)});
+    go(2)});
+  $('#to3').addEventListener('click',function(){$('#dEdit').textContent=edits;var exp=30+edits*10+(ok?20:5);
+    $('#expTxt').textContent='+'+exp+' EXP';go(3);setTimeout(function(){$('#expBar').style.width=Math.min(100,exp)+'%'},60)});
   $('#again').addEventListener('click',function(){$$('.ph').forEach(function(x){x.classList.remove('sel')});sel=null;$('#to1').disabled=true;$('#expBar').style.width='0';go(0)});
 })();
 </script>
+<script src="../assets/site.js"></script>
 </body>
 </html>
