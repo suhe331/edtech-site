@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ちゃり検｜通学路の写真で学ぶ、自転車ルール学習アプリ</title>
+<meta name="description" content="ちゃり検は、先生が撮った通学路の写真からAIが問題を作り、IRTで一人ひとりに合わせて出題する自転車ルール学習アプリ。2026年4月の青切符制度に対応。">
+<style>
+:root{
+  --accent:#17288B; --accent-light:#eef0fa; --accent-dark:#0f1c63;
+  --line:#EEC625; --line-soft:#fbf3cf;
+  --cream:#f5f3ee; --surface:#fff; --border:#e2ddd5;
+  --text:#1a1a18; --muted:#6b6962;
+  --correct:#16a34a; --correct-light:#f0fdf4;
+  --warn:#854F0B; --warn-light:#FAEEDA;
+  --r:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','BIZ UDPGothic','Noto Sans JP',sans-serif;color:var(--text);background:#fff;line-height:1.75;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+img{max-width:100%;display:block}
+.mono{font-family:'SF Mono','SFMono-Regular','Menlo','Consolas',monospace}
+.container{max-width:1080px;margin:0 auto;padding:0 24px}
+section{padding:80px 0}
+.bg-cream{background:var(--cream)}
+.sec-head{text-align:center;margin-bottom:44px}
+.sec-en{font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--accent);text-transform:uppercase;margin-bottom:8px}
+.sec-title{font-size:clamp(23px,3.2vw,32px);font-weight:700;letter-spacing:-.01em;line-height:1.45}
+.sec-title .hl{background:linear-gradient(transparent 62%,var(--line) 62%)}
+.sec-lead{margin:14px auto 0;max-width:640px;font-size:14.5px;color:var(--muted);line-height:1.95}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:700;text-decoration:none;border-radius:10px;padding:14px 26px;font-size:15px;transition:.15s;border:1.5px solid transparent;white-space:nowrap}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-dark)}
+.btn-gold{background:var(--line);color:#20200f}
+.btn-gold:hover{filter:brightness(.95)}
+.btn-line{background:#fff;color:var(--accent);border-color:var(--accent)}
+.btn-line:hover{background:var(--accent);color:#fff}
+
+/* header */
+.site-header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.95);backdrop-filter:blur(6px);border-bottom:1px solid var(--border)}
+.header-inner{display:flex;align-items:center;gap:28px;padding:12px 24px;max-width:1080px;margin:0 auto}
+.logo{font-size:20px;font-weight:800;letter-spacing:-.5px;text-decoration:none}
+.logo em{color:var(--accent);font-style:normal}
+.header-nav{display:none;gap:24px;font-size:13.5px;font-weight:600;margin-left:8px}
+.header-nav a{text-decoration:none;color:var(--text)}
+.header-nav a:hover{color:var(--accent)}
+@media(min-width:860px){.header-nav{display:flex}}
+.header-cta{display:flex;gap:8px;margin-left:auto}
+.header-cta .btn{padding:9px 16px;font-size:13px;border-radius:8px}
+.header-cta .hide-sm{display:none}
+@media(min-width:620px){.header-cta .hide-sm{display:inline-flex}}
+
+/* hero */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--border);padding:72px 0 0;
+  background:
+    linear-gradient(100deg,rgba(255,255,255,.98) 0%,rgba(255,255,255,.93) 42%,rgba(255,255,255,.7) 70%,rgba(255,255,255,.5) 100%),
+    url('assets/hero.png') center 35%/cover no-repeat}
+.hero-grid{display:grid;grid-template-columns:1fr;gap:40px;align-items:center}
+@media(min-width:900px){.hero-grid{grid-template-columns:1.05fr .95fr;gap:24px}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;background:var(--line);color:#20200f;padding:6px 14px;border-radius:20px;margin-bottom:20px}
+.hero h1{text-wrap:balance;font-size:clamp(26px,3.9vw,40px);font-weight:800;letter-spacing:-.02em;line-height:1.38}
+.hero h1 .u{color:var(--accent)}
+.hero-def{margin-top:18px;font-size:15.5px;line-height:1.95;color:#3a3a36;max-width:520px}
+.hero-def b{color:var(--accent)}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.hero-sub-link{margin-top:16px;font-size:13px;color:var(--muted)}
+.hero-sub-link a{color:var(--accent);font-weight:600}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);margin-top:56px;background:#fff;border:1px solid var(--border);border-bottom:none;border-radius:16px 16px 0 0;overflow:hidden}
+.hero-stats>div{padding:20px 16px;text-align:center;border-left:1px solid var(--border)}
+.hero-stats>div:first-child{border-left:none}
+.hs-num{font-size:clamp(22px,3vw,30px);font-weight:800;color:var(--accent)}
+.hs-num small{font-size:13px;font-weight:700;margin-left:2px}
+.hs-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* hero product visual */
+.visual{position:relative;padding:8px 0 24px}
+.pc{background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:0 24px 48px -24px rgba(23,40,139,.35);overflow:hidden}
+.bar{background:var(--cream);border-bottom:1px solid var(--border);padding:8px 12px;display:flex;gap:6px;align-items:center}
+.bar i{width:8px;height:8px;border-radius:50%;background:#d6d1c6;display:block}
+.bar span{margin-left:8px;font-size:10px;color:var(--muted)}
+.pc-body{padding:14px}
+.pc-title{font-size:11px;font-weight:700;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.pc-title .tag{font-size:9px;background:var(--accent-light);color:var(--accent);padding:2px 8px;border-radius:20px}
+.pc-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pc-photo{height:92px;border-radius:8px;background:linear-gradient(135deg,#dfe6f2,#b9c9e4);display:flex;align-items:center;justify-content:center;font-size:10px;color:#4b5d80;text-align:center;line-height:1.5}
+.pc-gen{font-size:10.5px;border:1px dashed var(--accent);background:var(--accent-light);border-radius:8px;padding:8px 10px;color:var(--accent-dark);line-height:1.6}
+.pc-gen b{display:block;font-size:9.5px;color:var(--accent);margin-bottom:2px}
+.pc-bars{margin-top:10px}
+.pc-bar{display:flex;align-items:center;gap:8px;font-size:9.5px;color:var(--muted);margin-top:5px}
+.pc-bar em{flex:0 0 58px;font-style:normal}
+.pc-bar span{flex:1;height:6px;background:#eceae4;border-radius:4px;overflow:hidden}
+.pc-bar span i{display:block;height:100%;background:var(--accent);border-radius:4px}
+.phone{position:absolute;right:-6px;bottom:0;width:150px;background:#fff;border:6px solid #1a1a18;border-radius:26px;box-shadow:0 20px 40px -16px rgba(0,0,0,.45);overflow:hidden}
+@media(min-width:420px){.phone{width:170px}}
+.phone-in{padding:12px 10px 12px}
+.ph-head{display:flex;justify-content:space-between;font-size:8.5px;color:var(--muted);margin-bottom:6px}
+.ph-head b{background:var(--accent-light);color:var(--accent);padding:1px 7px;border-radius:20px}
+.ph-photo{height:56px;border-radius:6px;background:linear-gradient(135deg,#dfe6f2,#b9c9e4);margin-bottom:6px;font-size:8px;color:#4b5d80;display:flex;align-items:center;justify-content:center}
+.ph-q{font-size:9.5px;font-weight:700;line-height:1.55;margin-bottom:6px}
+.ph-c{font-size:9px;border:1.2px solid var(--border);border-radius:6px;padding:5px 7px;margin-bottom:4px}
+.ph-c.ok{border-color:var(--correct);background:var(--correct-light);color:var(--correct);font-weight:700}
+.visual .pc{margin-right:70px}
+@media(min-width:420px){.visual .pc{margin-right:90px}}
+
+/* what is */
+.whatis-flow{display:grid;grid-template-columns:1fr;gap:14px;align-items:stretch}
+@media(min-width:860px){.whatis-flow{grid-template-columns:1fr auto 1fr auto 1fr}}
+.flow-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:26px 22px;text-align:center}
+.flow-ico{width:60px;height:60px;border-radius:50%;background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 14px}
+.flow-who{font-size:11.5px;font-weight:700;color:var(--accent);letter-spacing:.06em}
+.flow-title{font-size:17px;font-weight:700;margin:4px 0 8px}
+.flow-desc{font-size:13px;color:var(--muted);line-height:1.85;text-align:left}
+.flow-arrow{display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--line);font-weight:800}
+.flow-arrow::before{content:'▼'}
+@media(min-width:860px){.flow-arrow::before{content:'▶'}}
+.whatis-note{margin-top:28px;background:var(--line-soft);border-radius:var(--r);padding:20px 24px;font-size:14px;line-height:1.95;text-align:center}
+.whatis-note b{color:var(--accent)}
+
+/* outcomes */
+.out-grid{display:grid;grid-template-columns:1fr;gap:18px}
+@media(min-width:760px){.out-grid{grid-template-columns:1fr 1fr}}
+.out-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:28px 26px;position:relative;overflow:hidden}
+.out-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--line)}
+.out-n{font-size:12px;font-weight:700;color:var(--accent)}
+.out-title{font-size:18px;font-weight:700;margin:6px 0 10px;line-height:1.5}
+.out-desc{font-size:13.5px;color:var(--muted);line-height:1.9}
+.out-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.out-tags span{font-size:11px;font-weight:600;background:var(--accent-light);color:var(--accent);padding:3px 10px;border-radius:20px}
+
+/* compare */
+.cmp{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:760px){.cmp{grid-template-columns:1fr 1fr}}
+.cmp-col{border-radius:var(--r);padding:26px;border:1px solid var(--border);background:#fff}
+.cmp-col.before{background:#faf9f6}
+.cmp-col.after{border:2px solid var(--accent)}
+.cmp-h{font-size:14px;font-weight:800;margin-bottom:14px}
+.cmp-col.after .cmp-h{color:var(--accent)}
+.cmp-col ul{list-style:none}
+.cmp-col li{font-size:13.5px;line-height:1.8;padding:8px 0 8px 26px;position:relative;border-top:1px solid var(--border)}
+.cmp-col li:first-child{border-top:none}
+.cmp-col.before li::before{content:'△';position:absolute;left:0;color:var(--muted)}
+.cmp-col.after li::before{content:'✓';position:absolute;left:2px;color:var(--correct);font-weight:800}
+
+/* screens */
+.scr-grid{display:grid;grid-template-columns:1fr;gap:28px;align-items:start}
+@media(min-width:860px){.scr-grid{grid-template-columns:1.25fr .75fr}}
+.scr-cap{text-align:center;margin-top:14px}
+.scr-cap b{display:block;font-size:14.5px}
+.scr-cap span{font-size:12.5px;color:var(--muted)}
+.mock-card{background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:0 20px 40px -24px rgba(20,23,26,.3);overflow:hidden}
+.t-body{padding:16px}
+.t-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.t-stat{background:var(--cream);border-radius:8px;padding:8px 10px}
+.t-stat b{font-size:17px;color:var(--accent);display:block}
+.t-stat span{font-size:9.5px;color:var(--muted)}
+.t-rank{display:flex;align-items:center;gap:8px;font-size:11px;padding:7px 0;border-top:1px solid var(--border)}
+.t-rank .av{width:20px;height:20px;border-radius:50%;background:var(--accent-light);color:var(--accent);font-weight:700;font-size:10px;display:flex;align-items:center;justify-content:center}
+.t-rank span{flex:1}
+.s-body{padding:16px}
+.s-head{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:8px}
+.s-head b{background:var(--accent-light);color:var(--accent);padding:2px 9px;border-radius:20px}
+.s-photo{height:96px;border-radius:8px;background:linear-gradient(135deg,#dfe6f2,#b9c9e4);display:flex;align-items:center;justify-content:center;font-size:11px;color:#4b5d80;margin-bottom:10px}
+.s-q{font-size:12.5px;font-weight:700;line-height:1.7;margin-bottom:10px}
+.s-c{font-size:11.5px;border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;margin-bottom:6px}
+.s-c.ok{border-color:var(--correct);background:var(--correct-light);color:var(--correct);font-weight:700}
+
+/* steps */
+.steps{display:grid;grid-template-columns:1fr;gap:14px;counter-reset:s}
+@media(min-width:860px){.steps{grid-template-columns:repeat(4,1fr)}}
+.step{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:24px 20px;position:relative}
+.step-n{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;font-weight:800;font-size:13px;margin-bottom:12px}
+.step-title{font-size:15px;font-weight:700;margin-bottom:6px}
+.step-desc{font-size:12.8px;color:var(--muted);line-height:1.85}
+.step-who{position:absolute;top:22px;right:18px;font-size:10px;font-weight:700;background:var(--line-soft);color:var(--warn);padding:2px 9px;border-radius:20px}
+
+/* use cases */
+.use-grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:700px){.use-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:960px){.use-grid{grid-template-columns:repeat(4,1fr)}}
+.use-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:24px 20px}
+.use-ico{font-size:30px;margin-bottom:10px}
+.use-title{font-size:15.5px;font-weight:700;margin-bottom:6px}
+.use-desc{font-size:12.8px;color:var(--muted);line-height:1.85}
+.use-how{margin-top:12px;padding-top:10px;border-top:1px dashed var(--border);font-size:12px;color:var(--accent);font-weight:600}
+
+/* roadmap */
+.road{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:760px){.road{grid-template-columns:repeat(4,1fr)}}
+.road-item{border-radius:var(--r);padding:20px;border:1px solid var(--border);background:#fff}
+.road-item.now{border:2px solid var(--accent)}
+.road-st{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 10px;border-radius:20px;margin-bottom:10px}
+.now .road-st{background:var(--correct-light);color:var(--correct)}
+.soon .road-st{background:var(--warn-light);color:var(--warn)}
+.road-title{font-size:14.5px;font-weight:700;margin-bottom:4px}
+.road-desc{font-size:12.5px;color:var(--muted);line-height:1.8}
+
+/* cta */
+.cta{background:var(--accent);color:#fff}
+.cta .sec-en{color:var(--line)}
+.cta .sec-lead{color:#c9cff0}
+.cta-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:8px}
+@media(min-width:860px){.cta-grid{grid-template-columns:repeat(3,1fr)}}
+.cta-card{background:#fff;color:var(--text);border-radius:var(--r);padding:28px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;text-decoration:none;transition:.15s}
+.cta-card:hover{transform:translateY(-3px)}
+.cta-ico{font-size:34px;margin-bottom:8px}
+.cta-t{font-size:16.5px;font-weight:800}
+.cta-d{font-size:12.8px;color:var(--muted);line-height:1.85;margin:8px 0 18px}
+.cta-card .btn{margin-top:auto;width:100%}
+
+/* footer */
+.footer{background:#12162f;color:#aab0d4;padding:56px 0 28px;font-size:13px}
+.f-grid{display:grid;grid-template-columns:1fr;gap:30px}
+@media(min-width:760px){.f-grid{grid-template-columns:1.4fr 1fr 1fr 1fr}}
+.f-logo{font-size:22px;font-weight:800;color:#fff}
+.f-logo em{color:var(--line);font-style:normal}
+.f-about{margin-top:10px;line-height:1.9;font-size:12.5px}
+.f-h{color:#fff;font-weight:700;margin-bottom:10px;font-size:13px}
+.f-col a{display:block;text-decoration:none;padding:4px 0}
+.f-col a:hover{color:var(--line)}
+.f-copy{margin-top:40px;padding-top:20px;border-top:1px solid rgba(255,255,255,.12);font-size:11.5px;text-align:center}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="#" class="logo">ちゃり<em>検</em></a>
+    <nav class="header-nav">
+      <a href="#about">ちゃり検とは</a>
+      <a href="#value">実現できる学び</a>
+      <a href="#screens">画面イメージ</a>
+      <a href="#flow">導入の流れ</a>
+      <a href="#usecase">活用シーン</a>
+    </nav>
+    <div class="header-cta">
+      <a href="teacher.html" class="btn btn-line hide-sm">先生の方</a>
+      <a href="start.html" class="btn btn-primary">学習をはじめる</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge">🚲 2026年4月〜 自転車の青切符制度に対応</div>
+        <h1>自分の<span class="u">通学路</span>で学ぶから、交通ルールが<span class="u">自分ごと</span>になる。</h1>
+        <p class="hero-def"><b>ちゃり検</b>は、先生が撮影した地元の交差点・標識の写真から<b>AIが問題を自動作成</b>し、<b>一人ひとりの理解度に合わせて出題</b>する、自転車ルールの学習ドリルです。小学生から大人まで、スマホやPCですぐに使えます。</p>
+        <div class="hero-ctas">
+          <a href="guest.html" class="btn btn-primary">登録なしで5問試す →</a>
+          <a href="#contact" class="btn btn-line">導入のご相談・資料請求</a>
+        </div>
+        <p class="hero-sub-link">学校コードをお持ちの方は <a href="start.html">こちらからログイン</a></p>
+      </div>
+
+      <div class="visual" aria-hidden="true">
+        <div class="pc">
+          <div class="bar"><i></i><i></i><i></i><span>先生用 問題作成</span></div>
+          <div class="pc-body">
+            <div class="pc-title">通学路の写真から問題を作る<span class="tag">AI生成</span></div>
+            <div class="pc-row">
+              <div class="pc-photo">📍 交差点の写真<br>（先生が撮影）</div>
+              <div class="pc-gen"><b>▼ 自動生成</b>問題文・3つの選択肢・解説・難易度を一括で作成</div>
+            </div>
+            <div class="pc-bars">
+              <div class="pc-bar"><em>道路標識</em><span><i style="width:78%"></i></span></div>
+              <div class="pc-bar"><em>交差点</em><span><i style="width:54%"></i></span></div>
+              <div class="pc-bar"><em>歩行者</em><span><i style="width:66%"></i></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="phone">
+          <div class="phone-in">
+            <div class="ph-head"><span>問題 3/5</span><b>道路標識</b></div>
+            <div class="ph-photo">📍 あの交差点</div>
+            <div class="ph-q">この標識の交差点、正しい進み方は？</div>
+            <div class="ph-c ok">✓ 一時停止して確認</div>
+            <div class="ph-c">そのまま通過</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div><div class="hs-num">100<small>問</small></div><div class="hs-lbl">収録問題数</div></div>
+      <div><div class="hs-num">10<small>分野</small></div><div class="hs-lbl">出題カテゴリ</div></div>
+      <div><div class="hs-num">3<small>ステップ</small></div><div class="hs-lbl">登録不要で始められる</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-en">What is Chari-Ken?</div>
+      <h2 class="sec-title">「ちゃり検」とは、<span class="hl">先生・AI・生徒をつなぐ</span><br>自転車ルールの学習プラットフォームです</h2>
+      <p class="sec-lead">教材づくりから出題・学習・振り返りまでを、ひとつのサービスで完結できます。</p>
+    </div>
+
+    <div class="whatis-flow">
+      <div class="flow-card">
+        <div class="flow-ico">📷</div>
+        <div class="flow-who">先生</div>
+        <div class="flow-title">通学路を撮影する</div>
+        <p class="flow-desc">スマホで地元の交差点や標識を撮って、アップロードするだけ。教材づくりの手間はほとんどありません。</p>
+      </div>
+      <div class="flow-arrow"></div>
+      <div class="flow-card">
+        <div class="flow-ico">🤖</div>
+        <div class="flow-who">AI</div>
+        <div class="flow-title">問題を自動作成する</div>
+        <p class="flow-desc">写真をもとに、問題文・選択肢・解説・難易度をAIが生成。先生は内容を確認するだけです。</p>
+      </div>
+      <div class="flow-arrow"></div>
+      <div class="flow-card">
+        <div class="flow-ico">📱</div>
+        <div class="flow-who">生徒</div>
+        <div class="flow-title">自分に合う問題で学ぶ</div>
+        <p class="flow-desc">IRT（項目反応理論）が理解度を推定し、ちょうどいい難しさの問題を出題。結果は先生に届きます。</p>
+      </div>
+    </div>
+
+    <div class="whatis-note">
+      「<b>あ、ここ知ってる</b>」という見覚えのある景色と結びついた記憶は、<br class="pc-br">覚えるルールではなく、<b>思い出せるルール</b>になります。
+    </div>
+  </div>
+</section>
+
+<!-- VALUE -->
+<section class="bg-cream" id="value">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-en">Value</div>
+      <h2 class="sec-title">ちゃり検で実現できる、<span class="hl">4つの学び</span></h2>
+      <p class="sec-lead">「ルールを知っている」から「現場で使える」へ。学び方そのものを変えます。</p>
+    </div>
+    <div class="out-grid">
+      <div class="out-card">
+        <div class="out-n mono">01</div>
+        <h3 class="out-title">自分の通学路が教材になる</h3>
+        <p class="out-desc">一般的な交差点のイラストではなく、生徒が毎日通る道そのものが問題の舞台。危険を「自分ごと」として捉え、実際の行動につながります。</p>
+        <div class="out-tags"><span>地域密着</span><span>写真つき出題</span></div>
+      </div>
+      <div class="out-card">
+        <div class="out-n mono">02</div>
+        <h3 class="out-title">一人ひとりに合った難易度で学べる</h3>
+        <p class="out-desc">IRTで能力値を推定し、簡単すぎず難しすぎない問題を自動選択。苦手な子も得意な子も、ちょうどよい手応えで学び続けられます。</p>
+        <div class="out-tags"><span>アダプティブ</span><span>IRT</span></div>
+      </div>
+      <div class="out-card">
+        <div class="out-n mono">03</div>
+        <h3 class="out-title">先生の教材づくりの負担を減らす</h3>
+        <p class="out-desc">写真を撮ってアップロードすれば、AIが問題・解説・難易度まで作成。法改正に合わせた更新も、短時間で行えます。</p>
+        <div class="out-tags"><span>AI自動生成</span><span>法改正対応</span></div>
+      </div>
+      <div class="out-card">
+        <div class="out-n mono">04</div>
+        <h3 class="out-title">みんなで楽しく続けられる</h3>
+        <p class="out-desc">「交通安全週間」などの期間限定イベントとクラス対抗ランキングで、1日5分の学習が習慣に。先生は参加状況と理解度をダッシュボードで確認できます。</p>
+        <div class="out-tags"><span>イベント</span><span>ランキング</span><span>学習分析</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARE -->
+<section>
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-en">Before / After</div>
+      <h2 class="sec-title">これまでの交通安全教育と、<span class="hl">何が変わる？</span></h2>
+    </div>
+    <div class="cmp">
+      <div class="cmp-col before">
+        <div class="cmp-h">これまでの教材・講習</div>
+        <ul>
+          <li>一般的なイラストや文章で学ぶため、自分ごとになりにくい</li>
+          <li>全員が同じ問題で、理解度に合わせられない</li>
+          <li>年に数回の講習で、学んだ後に定着が確認できない</li>
+          <li>地域の危険箇所を、教材に反映するのが大変</li>
+        </ul>
+      </div>
+      <div class="cmp-col after">
+        <div class="cmp-h">ちゃり検</div>
+        <ul>
+          <li>通学路の写真が問題になるので、見覚えのある景色で記憶に残る</li>
+          <li>IRTで一人ひとりに最適な難易度の問題を自動で出題</li>
+          <li>1日5分のイベント形式で、繰り返し学べて習慣化できる</li>
+          <li>写真1枚から問題を自動作成。地域の危険箇所をすぐ教材に</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCREENS -->
+<section class="bg-cream" id="screens">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-en">Screens</div>
+      <h2 class="sec-title">先生の画面と、生徒の画面</h2>
+      <p class="sec-lead">先生は落ち着いた管理画面で、生徒は迷わず操作できるシンプルな画面で。使う人にあわせて設計しています。</p>
+    </div>
+    <div class="scr-grid">
+      <div>
+        <div class="mock-card">
+          <div class="bar"><i></i><i></i><i></i><span>教員ダッシュボード</span></div>
+          <div class="t-body">
+            <div class="t-stats">
+              <div class="t-stat"><b>128</b><span>参加生徒</span></div>
+              <div class="t-stat"><b>82%</b><span>参加率</span></div>
+              <div class="t-stat"><b>1,940</b><span>解答数</span></div>
+            </div>
+            <div class="pc-bars" style="margin-top:0">
+              <div class="pc-bar"><em>道路標識</em><span><i style="width:82%"></i></span></div>
+              <div class="pc-bar"><em>交差点</em><span><i style="width:61%"></i></span></div>
+              <div class="pc-bar"><em>歩行者優先</em><span><i style="width:47%"></i></span></div>
+              <div class="pc-bar"><em>ヘルメット</em><span><i style="width:73%"></i></span></div>
+            </div>
+            <div style="margin-top:10px">
+              <div class="t-rank"><div class="av">3A</div><span>3年A組</span><b>810</b></div>
+              <div class="t-rank"><div class="av">3B</div><span>3年B組</span><b>742</b></div>
+            </div>
+          </div>
+        </div>
+        <div class="scr-cap"><b>先生用ダッシュボード（数値はイメージ）</b><span>分野別の理解度・参加率・クラスランキングを確認</span></div>
+      </div>
+      <div>
+        <div class="mock-card" style="max-width:300px;margin:0 auto">
+          <div class="s-body">
+            <div class="s-head"><span>問題 3 / 5</span><b>道路標識</b></div>
+            <div class="s-photo">📍 通学路の写真</div>
+            <div class="s-q">この標識がある交差点。自転車はどう進むのが正しい？</div>
+            <div class="s-c ok">✓ 一時停止してから左右確認</div>
+            <div class="s-c">減速せずそのまま通過</div>
+            <div class="s-c">歩道に上がって進む</div>
+          </div>
+        </div>
+        <div class="scr-cap"><b>生徒用ドリル（イメージ）</b><span>写真つきの問題を、スマホでサクサク解答</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FLOW -->
+<section id="flow">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-en">How it works</div>
+      <h2 class="sec-title">導入は、<span class="hl">ホームルームの5分</span>から</h2>
+      <p class="sec-lead">生徒は個人情報の登録が不要。学校コード・学年・組・出席番号・ニックネームだけで始められます。</p>
+    </div>
+    <div class="steps">
+      <div class="step"><span class="step-who">先生</span><div class="step-n mono">1</div><div class="step-title">学校コードを決める</div><p class="step-desc">学校名の略称など、生徒と共有できる英数字コードを1つ決めます（例：CHOFU001）。</p></div>
+      <div class="step"><span class="step-who">先生</span><div class="step-n mono">2</div><div class="step-title">通学路を撮影して問題化</div><p class="step-desc">危ないと感じる交差点や標識を撮影。AIが問題・解説・難易度を作成します。</p></div>
+      <div class="step"><span class="step-who">生徒</span><div class="step-n mono">3</div><div class="step-title">イベントで学習する</div><p class="step-desc">「交通安全週間」など1日5分のイベントに参加。ランキングで盛り上がります。</p></div>
+      <div class="step"><span class="step-who">先生</span><div class="step-n mono">4</div><div class="step-title">結果をふりかえる</div><p class="step-desc">分野別の理解度・参加率を確認し、次の撮影スポットや指導に活かします。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- USE CASES -->
+<section class="bg-cream" id="usecase">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-en">Use cases</div>
+      <h2 class="sec-title">さまざまな場所で、<span class="hl">それぞれの使い方</span>ができます</h2>
+    </div>
+    <div class="use-grid">
+      <div class="use-card"><div class="use-ico">🏫</div><div class="use-title">小・中・高校</div><p class="use-desc">ホームルームや総合的な学習の時間に、学年・クラス単位で。青切符制度への備えにも。</p><div class="use-how">学校コード＋イベント</div></div>
+      <div class="use-card"><div class="use-ico">📖</div><div class="use-title">学習塾・習い事</div><p class="use-desc">通塾路の安全教育や、保護者への安心材料として。</p><div class="use-how">学校コード＋ドリル</div></div>
+      <div class="use-card"><div class="use-ico">🌱</div><div class="use-title">フリースクール</div><p class="use-desc">少人数・自分のペースでの学習に。ランキングを使わないドリル形式も選べます。</p><div class="use-how">ドリル形式</div></div>
+      <div class="use-card"><div class="use-ico">🚲</div><div class="use-title">個人・保護者・大人</div><p class="use-desc">登録なしですぐ試せるテストと、10分野の教科書で、自分のペースで学べます。</p><div class="use-how">ゲスト受験・教科書</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section>
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-en">Roadmap</div>
+      <h2 class="sec-title">学び方は、これからも広がります</h2>
+      <p class="sec-lead">テキスト＋写真での学習を土台に、段階的に体験の幅を広げていきます。</p>
+    </div>
+    <div class="road">
+      <div class="road-item now"><span class="road-st">現在利用可能</span><div class="road-title">アダプティブ・ドリル</div><p class="road-desc">IRTで最適な難易度の問題を自動出題。</p></div>
+      <div class="road-item now"><span class="road-st">現在利用可能</span><div class="road-title">AI問題自動生成</div><p class="road-desc">通学路の写真から問題・解説を一括作成。</p></div>
+      <div class="road-item now"><span class="road-st">現在利用可能</span><div class="road-title">イベント＆ランキング</div><p class="road-desc">期間限定のクラス対抗戦で学習を習慣に。</p></div>
+      <div class="road-item soon"><span class="road-st">今後の展開</span><div class="road-title">動画・VRシミュレーション</div><p class="road-desc">危険場面の疑似体験と、オープンバッジの発行。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="contact">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-en">Get started</div>
+      <h2 class="sec-title">まずは、気軽に触ってみてください</h2>
+      <p class="sec-lead">登録なしで試せるテストから、導入のご相談まで。目的に合わせてお選びください。</p>
+    </div>
+    <div class="cta-grid">
+      <a href="guest.html" class="cta-card">
+        <div class="cta-ico">🚲</div><div class="cta-t">登録なしで試す</div>
+        <p class="cta-d">ログイン不要で5問のテストに挑戦。結果は保存されません。</p>
+        <span class="btn btn-primary">ゲスト受験へ →</span>
+      </a>
+      <a href="textbook.html" class="cta-card">
+        <div class="cta-ico">📖</div><div class="cta-t">教科書で学ぶ</div>
+        <p class="cta-d">10分野のルールを、オンライン教科書のように読んで学べます。</p>
+        <span class="btn btn-line">教科書を開く →</span>
+      </a>
+      <a href="mailto:contact@u-poc.example?subject=ちゃり検についての問い合わせ" class="cta-card">
+        <div class="cta-ico">✉️</div><div class="cta-t">導入のご相談・資料請求</div>
+        <p class="cta-d">学校コードの発行、費用、導入スケジュールなどお気軽にどうぞ。</p>
+        <span class="btn btn-gold">お問い合わせ →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="f-grid">
+      <div>
+        <div class="f-logo">ちゃり<em>検</em></div>
+        <p class="f-about">通学路の写真から問題を作り、一人ひとりに合わせて学べる自転車ルール学習アプリ。サイクリング部で2,000km無事故で走った経験から生まれました。</p>
+      </div>
+      <div class="f-col"><div class="f-h">学ぶ</div><a href="start.html">学習をはじめる</a><a href="guest.html">ゲスト受験</a><a href="textbook.html">教科書で学ぶ</a><a href="safety.html">イラストで学ぶ</a></div>
+      <div class="f-col"><div class="f-h">先生・学校の方</div><a href="teacher.html">教員ダッシュボード</a><a href="generate.html">問題生成ツール</a><a href="#flow">導入の流れ</a></div>
+      <div class="f-col"><div class="f-h">サービス情報</div><a href="#about">ちゃり検とは</a><a href="#value">実現できる学び</a><a href="#contact">お問い合わせ</a></div>
+    </div>
+    <div class="f-copy"><a href="../" style="text-decoration:underline">← 運営会社サイト（ソトマナ）へ</a>　｜　© 2026 ちゃり検 — U☆PoC 学生コンペ出展作品</div>
+  </div>
+</footer>
+
+</body>
+</html>
