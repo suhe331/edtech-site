@@ -18,6 +18,7 @@
 .art h1{font-size:clamp(24px,4vw,34px);font-weight:900;line-height:1.5;margin:14px 0 24px}
 .art p{font-size:16px;line-height:2;margin-bottom:18px}
 .art .meta{display:flex;gap:14px;align-items:center;color:var(--muted);font-size:14px}
+.fg{margin:8px 0 26px}.fg img{width:100%;height:auto;border-radius:16px;display:block;background:var(--brand-soft)}.fg figcaption{font-size:13px;color:var(--muted);margin-top:8px}
 .pn{display:flex;justify-content:space-between;gap:12px;max-width:760px;margin:48px auto 0;padding-top:24px;border-top:1px solid var(--line);font-size:14px;flex-wrap:wrap}
 .pn a{color:var(--brand-d);font-weight:700;text-decoration:none}
 </style>
@@ -56,7 +57,7 @@
   if(id&&i>=0){
     var n=N[i];document.title=n.title+'｜ソトマナ';
     var prev=N[i+1],next=N[i-1];
-    main.innerHTML='<div class="art"><div class="meta"><time>'+fmt(n.date)+'</time><span class="tg">'+esc(n.tag||'お知らせ')+'</span></div><h1>'+esc(n.title)+'</h1>'+n.body.map(function(p){return '<p>'+esc(p)+'</p>'}).join('')+
+    main.innerHTML='<div class="art"><div class="meta"><time>'+fmt(n.date)+'</time><span class="tg">'+esc(n.tag||'お知らせ')+'</span></div><h1>'+esc(n.title)+'</h1>'+n.body.map(function(p){if(typeof p==='string')return '<p>'+esc(p)+'</p>';if(p.img)return '<figure class="fg"><img src="../'+esc(p.img)+'" alt="'+esc(p.alt||'')+'">'+(p.cap?'<figcaption>'+esc(p.cap)+'</figcaption>':'')+'</figure>';return ''}).join('')+
       '<div class="pn"><span>'+(prev?'<a href="?id='+prev.id+'">← '+esc(prev.title)+'</a>':'')+'</span><a href="./">お知らせ一覧</a><span>'+(next?'<a href="?id='+next.id+'">'+esc(next.title)+' →</a>':'')+'</span></div></div>';
   }else{
     document.getElementById('list').innerHTML=N.map(function(n){return '<li><a href="?id='+n.id+'"><time>'+fmt(n.date)+'</time><span class="tg">'+esc(n.tag||'お知らせ')+'</span><span class="tt">'+esc(n.title)+'</span></a></li>'}).join('');
