@@ -3,114 +3,73 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ちゃり検｜学び方を選ぶ</title>
+<title>ちゃり検｜はじめる</title>
 <style>
 :root{
-  --bg:#f5f3ee;--surface:#fff;--border:#e2ddd5;--text:#1a1a18;--muted:#7a7870;
-  --accent:#17288B;--accent-light:#eef0fa;--accent-dark:#0f1c63;
-  --line:#EEC625;--warn:#854F0B;--warn-light:#FAEEDA;--r:16px;--rs:8px;
+  --bg:#f7f8fa;--surface:#fff;--border:#e4e9ef;--text:#2a1f2e;--muted:#6b7280;
+  --accent:#17288B;--accent2:#3271d8;--accent-light:#eef3ff;--teal:#3D737A;--r:12px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','BIZ UDPGothic',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-a{color:inherit}
-.wrap{max-width:920px;margin:0 auto;padding:20px 20px 64px}
-
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:8px 0 28px}
-.logo{font-size:18px;font-weight:700;letter-spacing:-.5px;text-decoration:none;color:var(--text)}
-.logo em{color:var(--accent);font-style:normal}
+.site-header{background:var(--surface);border-bottom:1px solid var(--border);height:56px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+.logo{font-size:20px;font-weight:700;letter-spacing:-.5px;text-decoration:none;color:var(--text)}
+.logo em{color:var(--accent2);font-style:normal}
 .back-link{font-size:13px;color:var(--muted);text-decoration:none}
 .back-link:hover{color:var(--accent)}
+.wrap{max-width:960px;margin:0 auto;padding:48px 20px 64px}
+.page-title{font-size:28px;font-weight:700;text-align:center}
+.page-sub{font-size:14px;color:var(--muted);text-align:center;margin:8px 0 36px}
 
-.page-title{font-size:26px;font-weight:700;letter-spacing:-.01em;margin-bottom:8px}
-.page-sub{font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:32px;max-width:560px}
+.main-grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:680px){.main-grid{grid-template-columns:1fr 1fr}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:28px 24px;text-decoration:none;color:var(--text);display:flex;flex-direction:column;align-items:flex-start;gap:8px;transition:border-color .15s,box-shadow .15s}
+.card:hover{border-color:var(--accent);box-shadow:0 4px 16px rgba(23,40,139,.1)}
+.icon{font-size:36px;line-height:1;margin-bottom:6px}
+.ttl{font-size:20px;font-weight:700}
+.desc{font-size:13px;color:var(--muted);line-height:1.8}
+.cta{margin-top:auto;padding-top:12px;font-size:14px;font-weight:700;color:var(--accent)}
 
-.mode-grid{display:grid;grid-template-columns:1fr;gap:14px}
-@media(min-width:680px){.mode-grid{grid-template-columns:1fr 1fr}}
-
-.mode-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;text-decoration:none;color:var(--text);display:flex;flex-direction:column;transition:border-color .15s,transform .15s}
-.mode-card:hover{border-color:var(--accent);transform:translateY(-2px)}
-.mode-card.disabled{opacity:.6;cursor:default}
-.mode-card.disabled:hover{border-color:var(--border);transform:none}
-
-.mode-thumb{height:132px;background:repeating-linear-gradient(45deg,#eceae4,#eceae4 10px,#e4e1d9 10px,#e4e1d9 20px);display:flex;align-items:center;justify-content:center;position:relative}
-.mode-thumb .icon{font-size:34px;opacity:.55}
-.mode-thumb-label{position:absolute;bottom:8px;right:10px;font-size:10px;color:var(--muted);background:rgba(255,255,255,.8);padding:2px 8px;border-radius:20px}
-
-.mode-body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:6px;flex:1}
-.mode-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.mode-title{font-size:15.5px;font-weight:700}
-.badge{font-size:10px;font-weight:600;padding:2px 9px;border-radius:20px;white-space:nowrap}
-.badge-live{background:#E1F5EE;color:#085041}
-.badge-soon{background:var(--warn-light);color:var(--warn)}
-.badge-guest{background:var(--accent-light);color:var(--accent)}
-.mode-desc{font-size:12.5px;color:var(--muted);line-height:1.75}
-.mode-cta{margin-top:auto;padding-top:10px;font-size:12.5px;font-weight:600;color:var(--accent)}
-
-.foot-note{font-size:12px;color:var(--muted);text-align:center;margin-top:36px;line-height:1.8}
-.foot-note a{color:var(--accent);text-decoration:none}
+.illust{margin-top:16px;border-left:4px solid #00DDFA;flex-direction:row;align-items:center;gap:16px;padding:20px 24px}
+.illust .icon{margin:0}
+.illust .body{flex:1}
+.illust .ttl{font-size:17px}
+.illust .arrow{font-size:18px;font-weight:700;color:var(--teal)}
+.illust:hover{border-color:#00DDFA;box-shadow:0 4px 16px rgba(0,221,250,.18)}
 </style>
 </head>
 <body>
+<header class="site-header">
+  <a href="index.html" class="logo">ちゃり<em>検</em></a>
+  <a href="index.html" class="back-link">← トップへ戻る</a>
+</header>
+
 <div class="wrap">
+  <h1 class="page-title">ログイン</h1>
+  <p class="page-sub">あてはまる方を選んでください。</p>
 
-  <div class="topbar">
-    <a href="index.html" class="logo">ちゃり<em>検</em></a>
-    <a href="index.html" class="back-link">← トップへ戻る</a>
+  <div class="main-grid">
+    <a href="app.html" class="card">
+      <div class="icon">🎒</div>
+      <div class="ttl">生徒ログイン</div>
+      <div class="desc">学校コード・学年・組・出席番号・ニックネームで入ります。</div>
+      <div class="cta">生徒の方はこちら →</div>
+    </a>
+    <a href="teacher.html" class="card">
+      <div class="icon">🧑‍🏫</div>
+      <div class="ttl">教員ログイン</div>
+      <div class="desc">学校コードで入ります。学習イベントの作成やクラスの確認ができます。</div>
+      <div class="cta">先生の方はこちら →</div>
+    </a>
   </div>
 
-  <div class="page-title">どうやって学ぶ？</div>
-  <p class="page-sub">5つの入口から選べます。学校コードをもらっている人は「学校でログイン」、まず試してみたい人は「ログインなしでテスト」がおすすめです。</p>
-
-  <div class="mode-grid">
-
-    <a href="app.html" class="mode-card">
-      <div class="mode-thumb"><span class="icon">🏫</span><span class="mode-thumb-label">サムネ準備中</span></div>
-      <div class="mode-body">
-        <div class="mode-top"><div class="mode-title">学校でログイン</div><span class="badge badge-live">利用可能</span></div>
-        <div class="mode-desc">学校コード・学年・組・出席番号・ニックネームで入ります。学習イベントやクラスランキングに参加できます。</div>
-        <div class="mode-cta">学校コードを持っている人はこちら →</div>
-      </div>
-    </a>
-
-    <a href="guest.html" class="mode-card">
-      <div class="mode-thumb"><span class="icon">🚲</span><span class="mode-thumb-label">サムネ準備中</span></div>
-      <div class="mode-body">
-        <div class="mode-top"><div class="mode-title">ログインせずにテスト</div><span class="badge badge-guest">ゲスト受験</span></div>
-        <div class="mode-desc">登録なしで、その場ですぐに問題を解けます。結果は保存されないお試し版です。</div>
-        <div class="mode-cta">まず試してみる →</div>
-      </div>
-    </a>
-
-    <a href="textbook.html" class="mode-card">
-      <div class="mode-thumb"><span class="icon">📖</span><span class="mode-thumb-label">サムネ準備中</span></div>
-      <div class="mode-body">
-        <div class="mode-top"><div class="mode-title">教科書で学ぶ</div><span class="badge badge-live">利用可能</span></div>
-        <div class="mode-desc">10のカテゴリごとに、ルールをオンライン教科書のように読んで学べます。テスト前の予習・復習に。</div>
-        <div class="mode-cta">カテゴリ一覧を見る →</div>
-      </div>
-    </a>
-
-    <a href="safety.html" class="mode-card">
-      <div class="mode-thumb"><span class="icon">🎨</span><span class="mode-thumb-label">サムネ準備中</span></div>
-      <div class="mode-body">
-        <div class="mode-top"><div class="mode-title">イラストで学ぶ</div><span class="badge badge-live">利用可能</span></div>
-        <div class="mode-desc">イラストを見ながら、自転車の安全ルールを直感的に学べます。小さなお子さんにもおすすめです。</div>
-        <div class="mode-cta">イラストで学ぶ →</div>
-      </div>
-    </a>
-
-    <div class="mode-card disabled">
-      <div class="mode-thumb"><span class="icon">🕶️</span><span class="mode-thumb-label">サムネ準備中</span></div>
-      <div class="mode-body">
-        <div class="mode-top"><div class="mode-title">シミュレーション</div><span class="badge badge-soon">近日公開</span></div>
-        <div class="mode-desc">交差点や坂道など、危険な場面を疑似体験しながら学ぶモードです。現在準備中です。</div>
-        <div class="mode-cta" style="color:var(--muted)">公開までお待ちください</div>
-      </div>
+  <a href="safety.html" class="card illust">
+    <div class="icon">🎨</div>
+    <div class="body">
+      <div class="ttl">イラストで学ぶ</div>
+      <div class="desc">ログイン不要。イラストを見ながら、自転車の安全ルールを学べます。</div>
     </div>
-
-  </div>
-
-  <p class="foot-note">先生の方は <a href="teacher.html">教員ダッシュボード</a> からご利用ください。</p>
+    <div class="arrow">→</div>
+  </a>
 </div>
 </body>
 </html>
