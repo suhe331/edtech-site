@@ -14,7 +14,7 @@
 
 <header class="hd"><div class="hd-in">
   <a href="#" class="logo"><span class="hex-m"></span>ソトマナ</a>
-  <nav class="nav"><a href="#products">プロダクト</a><a href="#about">私たちの考え</a><a href="#news">お知らせ</a><a href="#company">会社概要</a></nav>
+  <nav class="nav"><a href="#products">プロダクト</a><a href="#about">私たちの考え</a><a href="news/">お知らせ</a><a href="#company">会社概要</a></nav>
   <a href="#contact" class="pill solid">お問い合わせ</a>
 </div></header>
 
@@ -73,11 +73,8 @@
 <section id="news"><div class="wrap">
   <div class="eyebrow">News</div>
   <h2 class="h-l">お知らせ</h2>
-  <ul class="news">
-    <li><time>2026.11</time><span>「検定パレット」のデモを公開しました。</span></li>
-    <li><time>2026.11</time><span>「ちゃり検」のサイトをリニューアルしました。</span></li>
-    <li><time>2026.11</time><span>プログラミング教室で、「ちゃり検」のユーザビリティテストを実施予定です。</span></li>
-  </ul>
+  <ul class="news" id="newsList"></ul>
+  <div class="btns" style="margin-top:28px"><a href="news/" class="pill">お知らせ一覧</a></div>
 </div></section>
 
 <section id="company" class="soft"><div class="wrap">
@@ -103,10 +100,16 @@
   <div class="row">
     <div><a href="#" class="logo"><span class="hex-m"></span>ソトマナ</a><p style="margin-top:8px">「好き」と「得意」を、学びに。</p></div>
     <div><h4>プロダクト</h4><a href="chariken/">ちゃり検</a><a href="kentei-palette/">検定パレット</a></div>
-    <div><h4>会社情報</h4><a href="#about">私たちの考え</a><a href="#news">お知らせ</a><a href="#company">会社概要</a></div>
+    <div><h4>会社情報</h4><a href="#about">私たちの考え</a><a href="news/">お知らせ</a><a href="#company">会社概要</a></div>
   </div>
   <div class="cp">© 2026 ソトマナ<br>※ U☆PoC 学生コンペ向けの架空の企業サイトです。</div>
 </div></footer>
 <script src="assets/site.js"></script>
+<script src="news/news.js"></script>
+<script>
+(function(){var N=(window.NEWS||[]).slice(0,3),l=document.getElementById('newsList');
+function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML}
+l.innerHTML=N.map(function(n){return '<li><time>'+n.date.slice(0,7).replace('-','.')+'</time><a href="news/?id='+n.id+'" style="color:inherit;text-decoration:none"><span>'+esc(n.title)+'</span></a></li>'}).join('');})();
+</script>
 </body>
 </html>

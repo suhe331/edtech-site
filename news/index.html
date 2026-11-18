@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>お知らせ｜ソトマナ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+.nl{list-style:none;max-width:860px;margin:36px auto 0;border-top:1px solid var(--line)}
+.nl a{display:flex;gap:18px;padding:20px 4px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;align-items:baseline;flex-wrap:wrap}
+.nl a:hover .tt{color:var(--brand)}
+.nl time{color:var(--muted);flex:0 0 96px;font-size:14px}
+.tg{font-size:12px;font-weight:800;padding:3px 12px;border-radius:99px;background:var(--brand-soft);color:var(--brand-d);flex:0 0 auto}
+.tt{font-size:16px;font-weight:700;flex:1;min-width:200px}
+.art{max-width:760px;margin:0 auto}
+.art h1{font-size:clamp(24px,4vw,34px);font-weight:900;line-height:1.5;margin:14px 0 24px}
+.art p{font-size:16px;line-height:2;margin-bottom:18px}
+.art .meta{display:flex;gap:14px;align-items:center;color:var(--muted);font-size:14px}
+.pn{display:flex;justify-content:space-between;gap:12px;max-width:760px;margin:48px auto 0;padding-top:24px;border-top:1px solid var(--line);font-size:14px;flex-wrap:wrap}
+.pn a{color:var(--brand-d);font-weight:700;text-decoration:none}
+</style>
+</head>
+<body class="t-co">
+<header class="hd"><div class="hd-in">
+  <a href="../" class="logo"><span class="hex-m"></span>ソトマナ</a>
+  <nav class="nav"><a href="../#products">プロダクト</a><a href="../#about">私たちの考え</a><a href="./">お知らせ</a><a href="../#company">会社概要</a></nav>
+  <a href="../#contact" class="pill solid">お問い合わせ</a>
+</div></header>
+
+<section style="padding-top:140px"><div class="wrap" id="main">
+  <div class="eyebrow">News</div>
+  <h2 class="h-l">お知らせ</h2>
+  <ul class="nl" id="list"></ul>
+</div></section>
+
+<footer class="ft"><div class="wrap">
+  <div class="row">
+    <div><a href="../" class="logo"><span class="hex-m"></span>ソトマナ</a><p style="margin-top:8px">「好き」と「得意」を、学びに。</p></div>
+    <div><h4>プロダクト</h4><a href="../chariken/">ちゃり検</a><a href="../kentei-palette/">検定パレット</a></div>
+    <div><h4>会社情報</h4><a href="../#about">私たちの考え</a><a href="./">お知らせ</a><a href="../#company">会社概要</a></div>
+  </div>
+  <div class="cp">© 2026 ソトマナ<br>※ U☆PoC 学生コンペ向けの架空の企業サイトです。</div>
+</div></footer>
+
+<script src="../assets/site.js"></script>
+<script src="news.js"></script>
+<script>
+(function(){
+  function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML}
+  function fmt(d){return d.replace(/-/g,'.')}
+  var id=new URLSearchParams(location.search).get('id');
+  var N=window.NEWS||[],main=document.getElementById('main');
+  var i=N.findIndex(function(n){return n.id===id});
+  if(id&&i>=0){
+    var n=N[i];document.title=n.title+'｜ソトマナ';
+    var prev=N[i+1],next=N[i-1];
+    main.innerHTML='<div class="art"><div class="meta"><time>'+fmt(n.date)+'</time><span class="tg">'+esc(n.tag||'お知らせ')+'</span></div><h1>'+esc(n.title)+'</h1>'+n.body.map(function(p){return '<p>'+esc(p)+'</p>'}).join('')+
+      '<div class="pn"><span>'+(prev?'<a href="?id='+prev.id+'">← '+esc(prev.title)+'</a>':'')+'</span><a href="./">お知らせ一覧</a><span>'+(next?'<a href="?id='+next.id+'">'+esc(next.title)+' →</a>':'')+'</span></div></div>';
+  }else{
+    document.getElementById('list').innerHTML=N.map(function(n){return '<li><a href="?id='+n.id+'"><time>'+fmt(n.date)+'</time><span class="tg">'+esc(n.tag||'お知らせ')+'</span><span class="tt">'+esc(n.title)+'</span></a></li>'}).join('');
+  }
+})();
+</script>
+</body>
+</html>
