@@ -6,26 +6,38 @@
 <title>ちゃり検 教員ダッシュボード</title>
 <style>
 :root{
-  --bg:#f5f3ee;--surface:#fff;--border:#e2ddd5;--text:#1a1a18;--muted:#7a7870;
-  --accent:#17288B;--accent-light:#eef0fa;--correct:#16a34a;--correct-light:#f0fdf4;
+  --bg:#f7f8fa;--surface:#fff;--border:#e4e9ef;--text:#2a1f2e;--muted:#6b7280;
+  --accent:#17288B;--accent2:#3271d8;--accent-light:#eef3ff;--correct:#16a34a;--correct-light:#f0fdf4;
   --wrong:#dc2626;--wrong-light:#fef2f2;--warn:#854F0B;--warn-light:#FAEEDA;--r:12px;--rs:8px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','BIZ UDPGothic',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:1.25rem 1rem 3rem}
-.wrap{width:100%;max-width:860px;display:flex;flex-direction:column;gap:12px}
+body{font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','BIZ UDPGothic',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 16px 4rem}
+.wrap{width:100%;max-width:720px;display:flex;flex-direction:column;gap:12px}
 .screen{display:none;flex-direction:column;gap:12px}
 .screen.active{display:flex}
 
-.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
-.logo{font-size:18px;font-weight:700;letter-spacing:-0.5px;text-decoration:none;color:inherit}
-.logo em{color:var(--accent);font-style:normal}
+.topbar{position:relative;height:56px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.topbar::before{content:'';position:absolute;top:0;bottom:0;left:50%;width:100vw;transform:translateX(-50%);background:var(--surface);border-bottom:1px solid var(--border);z-index:-1}
+.logo{font-size:20px;font-weight:700;letter-spacing:-0.5px;text-decoration:none;color:inherit}
+.logo em{color:var(--accent2);font-style:normal}
 .teacher-badge{font-size:12px;padding:3px 10px;border-radius:20px;background:var(--warn-light);color:var(--warn);font-weight:500}
 .top-right{display:flex;align-items:center;gap:8px}
-.btn-sm{font-size:12px;padding:4px 10px;border:0.5px solid var(--border);border-radius:var(--rs);background:var(--surface);color:var(--muted);cursor:pointer}
+.btn-sm{font-size:12px;padding:4px 10px;border:1px solid var(--border);border-radius:var(--rs);background:var(--surface);color:var(--muted);cursor:pointer}
 
-.card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r);padding:16px 18px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px}
 .card-title{font-size:13px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:6px;justify-content:space-between}
 .card-title .t{display:flex;align-items:center;gap:6px}
+
+/* 2カラム */
+.dash-cols{display:flex;flex-direction:column;gap:12px}
+.dash-col{display:flex;flex-direction:column;gap:12px;min-width:0}
+@media(min-width:900px){
+  .wrap:has(#screen-dashboard.active){max-width:1240px}
+  .wrap:has(#screen-dashboard.active) .topbar{margin-bottom:16px}
+  #screen-dashboard .dash-cols{display:grid;grid-template-columns:420px minmax(0,1fr);gap:20px;align-items:start}
+  #screen-dashboard .dash-left{position:sticky;top:12px}
+  #screen-dashboard .stats-grid{grid-template-columns:repeat(3,1fr)}
+}
 
 /* login */
 .login-wrap{width:100%;max-width:440px;margin:0 auto}
@@ -37,11 +49,12 @@ input[type=text],input[type=date]{width:100%;font-size:14px;padding:10px 12px;bo
 input:focus{outline:2px solid var(--accent);border-color:transparent}
 .btn-primary{width:100%;font-size:15px;font-weight:700;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:var(--rs);cursor:pointer}
 .btn-primary:hover{background:#0f1c63}
+.btn-sm:hover{background:var(--bg)}
 .login-note{font-size:12px;color:var(--muted);padding:10px;background:var(--bg);border-radius:var(--rs);line-height:1.6;margin-top:8px}
 
 /* stat cards */
 .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.stat-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r);padding:14px 16px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px}
 .stat-lbl{font-size:11px;color:var(--muted);margin-bottom:6px}
 .stat-num{font-size:28px;font-weight:700;color:var(--accent);letter-spacing:-1px;line-height:1}
 .stat-sub{font-size:11px;color:var(--muted);margin-top:4px}
@@ -80,7 +93,7 @@ input:focus{outline:2px solid var(--accent);border-color:transparent}
 /* action tiles */
 .action-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 @media(max-width:600px){.action-grid{grid-template-columns:1fr}}
-.action-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r);padding:16px;text-decoration:none;color:var(--text);display:flex;flex-direction:column;gap:6px;cursor:pointer;transition:border-color .15s}
+.action-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;text-decoration:none;color:var(--text);display:flex;flex-direction:column;gap:6px;cursor:pointer;transition:border-color .15s}
 .action-card:hover{border-color:var(--accent);background:var(--accent-light)}
 .action-icon{font-size:20px}
 .action-title{font-size:14px;font-weight:600}
@@ -95,7 +108,7 @@ input:focus{outline:2px solid var(--accent);border-color:transparent}
 
 /* level selector (matches student app) */
 .lv-row{display:flex;gap:6px}
-.lv{flex:1;padding:9px 4px;border:0.5px solid var(--border);border-radius:var(--rs);background:var(--surface);font-size:13px;color:var(--muted);cursor:pointer;text-align:center;transition:all .15s}
+.lv{flex:1;padding:9px 4px;border:1px solid var(--border);border-radius:var(--rs);background:var(--surface);font-size:13px;color:var(--muted);cursor:pointer;text-align:center;transition:all .15s}
 .lv.sel{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:500}
 
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a18;color:#fff;font-size:13px;padding:10px 20px;border-radius:20px;display:none;z-index:100}
@@ -155,11 +168,19 @@ input:focus{outline:2px solid var(--accent);border-color:transparent}
       </div>
     </div>
 
+    <div class="dash-cols">
+    <div class="dash-col dash-left">
     <div class="card">
       <div class="card-title"><div class="t">📚 カテゴリ別 問題数</div></div>
       <div class="cat-list" id="cat-list"><div class="spinner-line">読み込み中…</div></div>
     </div>
 
+    <div class="card">
+      <div class="card-title"><div class="t">🏆 クラスランキング（上位10名）</div></div>
+      <div id="rank-list"><div class="spinner-line">イベントがある場合に表示されます</div></div>
+    </div>
+    </div>
+    <div class="dash-col">
     <div class="card">
       <div class="card-title">
         <div class="t">🚩 学習イベント</div>
@@ -191,14 +212,9 @@ input:focus{outline:2px solid var(--accent);border-color:transparent}
             <div class="lv" data-lv="hard" onclick="selectEvLevel(this)">むずかしい</div>
           </div>
         </div>
-        <button class="btn-primary" onclick="createEvent()">イベントを開始する</button>
+        <button class="btn-primary" onclick="submitCreateEvent()">イベントを開始する</button>
         <div class="login-note">例：5日間×1日5分を想定した「交通安全週間」など。開始日〜終了日の間、生徒のダッシュボードにイベントバナーとクラスランキングが表示されます。</div>
       </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title"><div class="t">🏆 クラスランキング（上位10名）</div></div>
-      <div id="rank-list"><div class="spinner-line">イベントがある場合に表示されます</div></div>
     </div>
 
     <div class="action-grid">
@@ -213,6 +229,8 @@ input:focus{outline:2px solid var(--accent);border-color:transparent}
         <div class="action-desc">保護者や他の先生に共有できる、ちゃり検の紹介ページです。</div>
       </a>
     </div>
+    </div>
+    </div>
   </div>
 
 </div>
@@ -223,6 +241,7 @@ input:focus{outline:2px solid var(--accent);border-color:transparent}
 const SUPABASE_URL='https://hwxreikopltisfoimuzf.supabase.co';
 const SUPABASE_KEY='sb_publishable_IibWbT-1J9MeXGN5XkJfMw_PqsRfgsi';
 const CATEGORIES=['走行ルール','信号機の種類','道路標識','危険行為禁止','走行判断','事故対応','安全対策','青切符・法律','自転車マナー','自転車整備・安全'];
+// カテゴリの表示順をランキングタブと合わせる（問題数はDBから動的取得）
 
 let schoolCode=null;
 
@@ -373,7 +392,7 @@ function selectEvLevel(el){
 
 function toggleEventForm(){document.getElementById('event-form').classList.toggle('open')}
 
-async function createEvent(){
+async function submitCreateEvent(){
   const name=document.getElementById('ev-name').value.trim();
   const start=document.getElementById('ev-start').value;
   const end=document.getElementById('ev-end').value;
