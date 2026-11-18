@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>自転車交通安全｜18のルール</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f5f7fa;color:#243447;font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif}
+header{background:#fff;border-bottom:1px solid #e5e9ef;padding:24px 20px}
+.head{max-width:1050px;margin:auto}
+h1{margin:0;font-size:30px;color:#17324d}
+.sub{color:#687787;margin-top:6px}
+.wrap{max-width:1050px;margin:22px auto;padding:0 16px;display:grid;grid-template-columns:270px 1fr;gap:20px}
+.panel,.lesson{background:#fff;border:1px solid #e4e9ef;border-radius:14px}
+.panel{padding:14px;height:max-content}
+.group{font-weight:700;color:#17324d;padding:10px 8px 6px}
+.item{width:100%;border:0;background:none;text-align:left;padding:9px 10px;border-radius:8px;cursor:pointer;color:#344555}
+.item:hover{background:#f0f4f9}
+.item.active{background:#e8f0ff;color:#1558b0;font-weight:700}
+.n{display:inline-block;width:24px;color:#7a8793}
+.lesson{padding:28px}
+.bar{height:7px;background:#e8edf2;border-radius:5px;margin-bottom:22px}
+.fill{height:100%;background:#3271d8;border-radius:5px;transition:.2s}
+.meta{font-size:13px;color:#3271d8;font-weight:700}
+.title{font-size:29px;margin:5px 0 18px;color:#17324d}
+.lesson-image,.result-image{width:100%;height:280px;object-fit:contain;display:block;background:#eef3f7;border-radius:12px}
+.result-image{margin-top:18px}
+.image-placeholder{width:100%;height:280px;border-radius:12px;background:#eef3f7;display:flex;align-items:center;justify-content:center;color:#7a8793;text-align:center;padding:20px}
+.quiz{margin-top:22px;padding:20px 0;border-top:1px solid #e4e9ef}
+.quiz h3{margin:0 0 8px;font-size:20px}
+.question{font-size:18px;font-weight:700;line-height:1.7;margin:0 0 12px}
+.choice{display:block;width:100%;text-align:left;padding:12px 14px;margin:8px 0;background:#fff;border:1px solid #d9e0e7;border-radius:8px;cursor:pointer;font-size:15px}
+.choice:hover{border-color:#3271d8;background:#f7faff}
+.choice.correct{background:#eaf7f0;border-color:#35a46e}
+.choice.wrong{background:#fff0f0;border-color:#d95a5a}
+.feedback{min-height:26px;font-weight:600;margin-top:12px;font-size:14px;line-height:1.7}
+.result{display:none;margin-top:18px;padding-top:20px;border-top:1px solid #e4e9ef}
+.result.show{display:block}
+.result h3{margin:0 0 12px;color:#17324d}
+.result-placeholder{display:none}
+.lesson-text{font-size:16px;line-height:1.9;margin-top:18px}
+.point{margin:16px 0 0;padding:13px 15px;background:#f4f7fa;border-left:4px solid #3271d8;line-height:1.7}
+.nav{display:flex;justify-content:space-between;margin-top:24px}
+.nav button{background:#17324d;color:#fff;border:0;border-radius:8px;padding:11px 17px;cursor:pointer}
+.nav button:disabled{opacity:.35;cursor:not-allowed}
+@media(max-width:760px){
+.wrap{grid-template-columns:1fr}.panel{order:2}.lesson{order:1}.title{font-size:25px}
+.lesson-image,.result-image,.image-placeholder{height:220px}
+}
+
+.result h3{font-size:21px;margin-bottom:12px}
+.feedback{padding:10px 12px;border-radius:8px;background:#f4f7fa;min-height:0}
+.feedback.good{background:#eaf7f0;color:#24784f!important}
+.feedback.bad{background:#fff0f0;color:#c43f3f!important}
+</style>
+</head>
+
+<body>
+<header>
+<div class="head" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+  <div>
+    <h1>自転車交通安全 18のルール</h1>
+    <div class="sub">こんなときどうする？！</div>
+  </div>
+  <a href="app.html" style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#17288B;color:#fff;border-radius:10px;text-decoration:none;font-size:14px;font-weight:700;white-space:nowrap">
+    🚲 ドリルに挑戦する →
+  </a>
+</div>
+</header>
+
+<div class="wrap">
+<aside class="panel" id="menu"></aside>
+
+<main class="lesson">
+<div class="bar"><div class="fill" id="fill"></div></div>
+<div class="meta" id="meta"></div>
+<div class="title" id="title"></div>
+
+<!-- ① 危険な場面のイラスト -->
+<img id="lessonImage" class="lesson-image" alt="">
+<div id="imagePlaceholder" class="image-placeholder" style="display:none">
+<div>画像がありません。<br><small>assets/safety/ に画像を入れてください。</small></div>
+</div>
+
+<!-- ② 予測クイズ -->
+<section class="quiz">
+<h3>確認クイズ</h3>
+<p class="question" id="q"></p>
+<div id="choices"></div>
+<div class="feedback" id="feedback"></div>
+</section>
+
+<!-- ③ 結果のイラスト＋④ 教訓 -->
+<section class="result" id="result">
+<h3>もしかしたら・・・</h3>
+<img id="resultImage" class="result-image" alt="">
+<div id="resultPlaceholder" class="image-placeholder" style="display:none">
+<div>結果の画像がありません。<br><small>assets/safety/ に画像を入れてください。</small></div>
+</div>
+<div class="lesson-text" id="text"></div>
+<div class="point" id="point"></div>
+</section>
+
+<div class="nav">
+<button id="prev" onclick="move(-1)">← 前へ</button>
+<button id="next" onclick="move(1)">次へ →</button>
+</div>
+</main>
+</div>
+
+<script>
+/*
+画像は各項目につき2枚です。
+
+assets/
+└─ safety/
+   ├─ 01_signal.jpg          ← 危険な場面
+   ├─ 01_signal_result.jpg   ← 起こる可能性がある事故・危険
+   ├─ 02_stop.jpg
+   ├─ 02_stop_result.jpg
+   ├─ 03_left.jpg
+   ├─ 03_left_result.jpg
+   ...
+   ├─ 18_insurance.jpg
+   └─ 18_insurance_result.jpg
+
+合計36枚。
+画像を差し替える場合は、同じファイル名でアップロードしてください。
+*/
+
+const data = [
+["A","交通ルール","信号無視","01_signal.jpg","01_signal_result.jpg",
+"赤信号のまま交差点へ進入すると、車や歩行者と衝突する可能性があります。",
+"自転車も車両です。信号に従い、赤信号では停止線の手前で止まりましょう。",
+["そのまま安全に通過できる","車と衝突する可能性がある","歩行者が必ず避けてくれる"],1],
+
+["A","交通ルール","一時停止","02_stop.jpg","02_stop_result.jpg",
+"一時停止せずに交差点へ進入すると、見えない方向から来る車や自転車と衝突する可能性があります。",
+"一時停止の標識がある場所では、停止線の手前でいったん止まり、安全を確認しましょう。",
+["速度を落とせば止まらなくてよい","停止線を越えてから確認する","停止線の手前で止まって確認する"],2],
+
+["A","交通ルール","右側通行・逆走","03_left.jpg","03_left_result.jpg",
+"車道を逆走すると、正面から来る車などと衝突する危険があります。",
+"車道では原則として道路の左側を通行しましょう。",
+["右側を走る","左側を走る","空いている側を走る"],1],
+
+["A","交通ルール","歩道での速度","04_sidewalk.jpg","04_sidewalk_result.jpg",
+"歩道を速い速度で走ると、歩行者の飛び出しなどに対応できず、接触する可能性があります。",
+"歩道を通行する場合は歩行者を優先し、すぐに止まれる速度で徐行しましょう。",
+["歩行者より速く走る","歩行者優先で徐行する","ベルを鳴らせば高速走行できる"],1],
+
+["A","交通ルール","二段階右折","05_right_turn.jpg","05_right_turn_result.jpg",
+"交差点で車と同じように一気に右折すると、対向車や横断する車両と衝突する危険があります。",
+"自転車で右折するときは、原則として二段階右折を行いましょう。",
+["車と同じように一気に右折する","二段階で右折する","歩道へ乗り上げて右折する"],1],
+
+["B","やってはいけないこと","スマホながら運転","06_smartphone.jpg","06_smartphone_result.jpg",
+"走行中にスマートフォンを見ると、前方や周囲への注意がそれて、車や歩行者に気づけない可能性があります。",
+"スマートフォンを操作するときは、安全な場所に止まってから行いましょう。",
+["停車して操作する","走りながら操作する","片手なら操作してよい"],0],
+
+["B","やってはいけないこと","傘さし運転","07_umbrella.jpg","07_umbrella_result.jpg",
+"傘を差しながら走ると、ハンドルやブレーキ操作が不十分になり、転倒や衝突につながる可能性があります。",
+"雨の日はレインウェアなどを利用し、安全に運転できる状態にしましょう。",
+["傘を片手で持つ","レインウェアを使う","傘をハンドルに固定する"],1],
+
+["B","やってはいけないこと","イヤホン","08_earphone.jpg","08_earphone_result.jpg",
+"周囲の音が聞こえにくいと、後ろから近づく車や自転車などに気づけない可能性があります。",
+"安全確認に必要な周囲の音が聞こえる状態で走行しましょう。",
+["周囲の音が聞こえる状態にする","音量を最大にする","両耳を完全にふさぐ"],0],
+
+["B","やってはいけないこと","二人乗り","09_two_people.jpg","09_two_people_result.jpg",
+"二人乗りでは自転車のバランスが崩れやすく、急な停止や方向転換が難しくなる可能性があります。",
+"原則として一人で乗車し、安全に自転車を操作できる状態を保ちましょう。",
+["二人で乗る","一人で乗る","低速なら二人で乗る"],1],
+
+["B","やってはいけないこと","飲酒運転","10_drinking.jpg","10_drinking_result.jpg",
+"飲酒すると判断力や運動能力が低下し、重大な事故につながる可能性があります。",
+"飲酒したら自転車に乗らないことが原則です。",
+["少量なら乗る","水を飲めば乗る","飲酒したら乗らない"],2],
+
+["B","やってはいけないこと","並進","11_parallel.jpg","11_parallel_result.jpg",
+"自転車が横に並んで走ると、他の自転車や車の通行を妨げ、接触する危険があります。",
+"原則として一列で走行しましょう。",
+["横に並ぶ","一列で走る","広い道路なら並んでよい"],1],
+
+["C","乗る前の確認","ブレーキ点検","12_brake.jpg","12_brake_result.jpg",
+"ブレーキに異常があるまま走ると、必要な場所で止まれず、衝突する可能性があります。",
+"乗車前にブレーキが正常に作動するか確認し、異常があれば修理してから乗りましょう。",
+["確認せず乗る","左右のブレーキを確認する","坂道で試す"],1],
+
+["C","乗る前の確認","夜間ライト","13_light.jpg","13_light_result.jpg",
+"夜間にライトを点けずに走ると、周囲から見えにくくなり、車などに気づかれない可能性があります。",
+"夜間はライトを点灯し、自分の存在を周囲に知らせましょう。",
+["ライトを消す","反射材だけで走る","ライトを点灯する"],2],
+
+["C","乗る前の確認","荷物の固定","14_luggage.jpg","14_luggage_result.jpg",
+"荷物が落ちたり車輪に絡んだりすると、バランスを崩して転倒する可能性があります。",
+"荷物は安全に固定し、運転操作を妨げないようにしましょう。",
+["ハンドルにぶら下げる","安全に固定する","手に持って走る"],1],
+
+["C","乗る前の確認","服装・フットウェア","15_clothes.jpg","15_clothes_result.jpg",
+"服の裾や不安定な履物が車輪やペダルに影響すると、転倒する可能性があります。",
+"安全にペダルを操作できる服装と靴を選びましょう。",
+["裾をそのままにする","動きやすい服装・靴を選ぶ","サンダルで走る"],1],
+
+["C","乗る前の確認","ヘルメット","16_helmet.jpg","16_helmet_result.jpg",
+"ヘルメットを正しく着用していないと、転倒時に十分な保護効果が得られない可能性があります。",
+"自転車に乗るときはヘルメットを着用し、正しくフィットさせましょう。",
+["あごひもをゆるめる","正しく着用する","頭に乗せるだけ"],1],
+
+["D","もしものとき","事故対応","17_accident.jpg","17_accident_result.jpg",
+"事故が起きたのに何もせず立ち去ると、けが人の救護が遅れたり、事故の対応ができなくなったりします。",
+"事故が起きたら、まず安全を確保し、必要に応じて119番・110番へ連絡しましょう。",
+["そのまま立ち去る","安全確保と必要な通報をする","写真だけ撮って帰る"],1],
+
+["D","もしものとき","自転車保険","18_insurance.jpg","18_insurance_result.jpg",
+"自転車事故では、相手に大きなけがをさせ、高額な賠償が必要になる可能性があります。",
+"万一に備えて自転車保険などを確認し、住んでいる地域の条例や学校のルールも確認しましょう。",
+["事故は起きないので不要","万一に備えて確認する","友人の保険で必ず補償される"],1]
+];
+
+let cur=0;
+
+function build(){
+ const menu=document.getElementById("menu");
+ const groups=["A","B","C","D"];
+ menu.innerHTML="";
+ groups.forEach(g=>{
+   const group=data.find(x=>x[0]===g)[1];
+   const h=document.createElement("div");
+   h.className="group"; h.textContent=group; menu.appendChild(h);
+   data.forEach((x,i)=>{
+     if(x[0]!==g)return;
+     const b=document.createElement("button");
+     b.className="item"; b.id="m"+i;
+     b.innerHTML='<span class="n">'+(i+1)+'</span>'+x[2];
+     b.onclick=()=>show(i);
+     menu.appendChild(b);
+   });
+ });
+}
+
+function setImage(img,placeholder,file,alt){
+ img.style.display="block"; placeholder.style.display="none";
+ img.onload=()=>{img.style.display="block";placeholder.style.display="none"};
+ img.onerror=()=>{img.style.display="none";placeholder.style.display="flex"};
+ img.src="assets/safety/"+file; img.alt=alt;
+}
+
+function show(i){
+ cur=i; const x=data[i];
+ document.getElementById("meta").textContent=x[1];
+ document.getElementById("title").textContent=(i+1)+". "+x[2];
+ setImage(document.getElementById("lessonImage"),document.getElementById("imagePlaceholder"),x[3],x[2]);
+ setImage(document.getElementById("resultImage"),document.getElementById("resultPlaceholder"),x[4],x[2]+" 結果");
+ document.getElementById("text").textContent=x[5];
+ document.getElementById("point").textContent="教訓："+x[6];
+
+ document.getElementById("q").textContent = quizQuestion(x[2]);
+  const customChoices = topicChoices(x[2]);
+  if(customChoices){
+    x[7] = customChoices;
+    x[8] = 0;
+  }
+ const choices=document.getElementById("choices"); choices.innerHTML="";
+ x[7].forEach((v,j)=>{
+   const b=document.createElement("button");
+   b.className="choice"; b.textContent=v; b.onclick=()=>answer(j);
+   choices.appendChild(b);
+ });
+ document.getElementById("feedback").textContent="";
+ document.getElementById("feedback").style.color="";
+ document.getElementById("result").classList.remove("show");
+ document.getElementById("fill").style.width=((i+1)/18*100)+"%";
+ document.getElementById("prev").disabled=i===0;
+ document.getElementById("next").disabled=i===17;
+ document.querySelectorAll(".item").forEach(b=>b.classList.remove("active"));
+ document.getElementById("m"+i).classList.add("active");
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function quizQuestion(title){
+  const questions = {
+    "信号無視":"赤信号になったら、どうする？",
+    "一時停止":"一時停止の標識があったら、どうする？",
+    "右側通行・逆走":"右側を走っていることに気づいたら、どうする？",
+    "歩道での速度":"歩道を走るとき、どうする？",
+    "二段階右折":"この交差点で右折するとき、どうする？",
+    "スマホながら運転":"走行中にスマホを使いたくなったら、どうする？",
+    "傘さし運転":"雨が降ってきたら、どうする？",
+    "イヤホン":"イヤホンをしているとき、どうする？",
+    "二人乗り":"友達を後ろに乗せてほしいと言われたら、どうする？",
+    "飲酒運転":"お酒を飲んだあと、自転車に乗ることになったら、どうする？",
+    "並進":"自転車で横に並んで走っているとき、どうする？",
+    "ブレーキ点検":"ブレーキの効きが悪いことに気づいたら、どうする？",
+    "夜間ライト":"暗くなってきたら、どうする？",
+    "荷物の固定":"荷物が不安定なことに気づいたら、どうする？",
+    "服装・フットウェア":"ペダルに引っかかりそうな服装だったら、どうする？",
+    "ヘルメット":"ヘルメットを着けずに出発しようとしたら、どうする？",
+    "事故対応":"自転車で人や車にぶつかったら、まずどうする？",
+    "自転車保険":"自転車に乗る前に、事故への備えとしてどうする？"
+  };
+  return questions[title] || "このあと、どうする？";
+}
+
+function topicChoices(title){
+  const choices = {
+    "信号無視":[
+      "停止線の手前で止まる",
+      "そのまま進む"
+    ],
+    "一時停止":[
+      "停止線の手前でいったん止まり、安全を確認する",
+      "速度を落とすだけで通過する"
+    ],
+    "右側通行・逆走":[
+      "安全を確認して左側へ戻る",
+      "そのまま右側を走り続ける"
+    ],
+    "歩道での速度":[
+      "歩行者に配慮し、すぐ止まれる速度で走る",
+      "歩道でも速度を落とさず走る"
+    ],
+    "二段階右折":[
+      "交差点を二段階に分けて右折する",
+      "車と同じように右折する"
+    ],
+    "スマホながら運転":[
+      "安全な場所に止まってから使う",
+      "走りながら短時間だけ見る"
+    ],
+    "傘さし運転":[
+      "安全な場所で止まり、雨具を使う",
+      "傘を差したまま走る"
+    ],
+    "イヤホン":[
+      "周囲の音を聞ける状態にして走る",
+      "音量を小さくしてそのまま走る"
+    ],
+    "二人乗り":[
+      "二人乗りをせず、一人で走る",
+      "短い距離なら乗せる"
+    ],
+    "飲酒運転":[
+      "自転車に乗らず、別の移動手段を使う",
+      "少量なら自転車に乗る"
+    ],
+    "並進":[
+      "一列になり、周囲を確認して走る",
+      "人がいなければ、そのまま並んで走る"
+    ],
+    "ブレーキ点検":[
+      "乗る前に点検し、必要なら修理する",
+      "そのまま出発する"
+    ],
+    "夜間ライト":[
+      "ライトを点けて走る",
+      "暗くてもライトなしで走る"
+    ],
+    "荷物の固定":[
+      "荷物を安全に固定してから走る",
+      "片手で持って走る"
+    ],
+    "服装・フットウェア":[
+      "動きやすく、車輪などに絡みにくい服装にする",
+      "引っかかりそうでもそのまま走る"
+    ],
+    "ヘルメット":[
+      "ヘルメットを正しく着用してから出発する",
+      "そのまま出発する"
+    ],
+    "事故対応":[
+      "安全を確保し、必要に応じて警察・救急へ連絡する",
+      "そのまま走り去る"
+    ],
+    "自転車保険":[
+      "地域のルールも確認し、必要な保険等に備える",
+      "事故が起きてから考える"
+    ]
+  };
+  return choices[title] || null;
+}
+
+// 各トピックの正解・不正解フィードバック（app.htmlの問題と対応）
+const FEEDBACK = {
+  "信号無視":{
+    ok:"正解！自転車も車両です。赤信号では必ず停止線の手前で止まりましょう。信号無視は青切符（反則金）の対象です。",
+    ng:"あぶない！赤信号は自転車も止まらなければなりません。「人がいないから大丈夫」は通用しません。"
+  },
+  "一時停止":{
+    ok:"正解！一時停止の標識では必ず止まって左右を確認。ゆっくり進むだけでは不十分です。",
+    ng:"あぶない！一時停止の標識は「必ず止まれ」という意味です。速度を落とすだけでは違反になります。"
+  },
+  "右側通行・逆走":{
+    ok:"正解！自転車は車道の左側通行が原則。逆走は正面衝突の危険があります。",
+    ng:"あぶない！車道の右側を走ると、前から来る車と正面衝突する危険があります。必ず左側を走りましょう。"
+  },
+  "歩道での速度":{
+    ok:"正解！歩道では歩行者が最優先。すぐに止まれる速度で徐行しましょう。",
+    ng:"あぶない！歩道での速い走行は歩行者を巻き込む事故につながります。歩行者優先で徐行が必要です。"
+  },
+  "二段階右折":{
+    ok:"正解！自転車の右折は交差点の向こう側の角まで直進してから向きを変える「二段階右折」が原則です。",
+    ng:"あぶない！自転車が車と同じように右折すると、対向車と衝突する危険があります。二段階右折が必要です。"
+  },
+  "スマホながら運転":{
+    ok:"正解！スマホを見るときは必ず止まってから。ながら運転は反則金12,000円の対象です。",
+    ng:"あぶない！走りながらのスマホ操作は前方不注意になります。反則金12,000円の対象にもなります。"
+  },
+  "傘さし運転":{
+    ok:"正解！傘さし運転は法律で禁止されています。雨の日はレインコートを使いましょう。",
+    ng:"あぶない！傘をさしながら走ると片手運転になり、ブレーキ操作が遅れます。法律違反でもあります。"
+  },
+  "イヤホン":{
+    ok:"正解！周囲の音（クラクション・踏切・緊急車両）が聞こえる状態を保ちましょう。",
+    ng:"あぶない！両耳イヤホンは車のクラクションや踏切の音が聞こえなくなる危険な状態です。"
+  },
+  "二人乗り":{
+    ok:"正解！二人乗りは原則禁止。バランスが崩れてブレーキも効きにくくなります。",
+    ng:"あぶない！二人乗りは法律で原則禁止です。バランスが崩れ、急停車ができなくなります。"
+  },
+  "飲酒運転":{
+    ok:"正解！自転車の飲酒運転も法律違反。酒酔い運転は5年以下の懲役または100万円以下の罰金です。",
+    ng:"あぶない！「少しなら大丈夫」は危険な思い込み。自転車の酒酔い運転は重大な犯罪です。"
+  },
+  "並進":{
+    ok:"正解！2台以上並んで走ることは原則禁止。後ろの車が追い越しにくくなり危険です。",
+    ng:"あぶない！並んで走ると車道幅を占有し、後続車との事故リスクが高まります。原則禁止です。"
+  },
+  "ブレーキ点検":{
+    ok:"正解！乗る前の点検は使用者の義務です。ブレーキが壊れたまま走るのは違法です。",
+    ng:"あぶない！整備不良の自転車での事故は自分の責任になります。乗る前の点検を忘れずに。"
+  },
+  "夜間ライト":{
+    ok:"正解！夜間のライト点灯は義務です。早めに点けて車から自分の存在を知らせましょう。",
+    ng:"あぶない！夜間無灯火は法律違反。ドライバーから見えず、衝突される危険があります。"
+  },
+  "荷物の固定":{
+    ok:"正解！荷物は安全に固定しましょう。落下すると後続車の事故原因にもなります。",
+    ng:"あぶない！不安定な荷物はバランスを崩す原因になります。必ず固定してから走りましょう。"
+  },
+  "服装・フットウェア":{
+    ok:"正解！サンダルや裾の長い服は車輪にはさまる危険があります。動きやすい服装で乗りましょう。",
+    ng:"あぶない！サンダルはペダルから滑って車輪に足がはさまる重大事故につながります。"
+  },
+  "ヘルメット":{
+    ok:"正解！2023年4月から全年齢で着用が努力義務になりました。頭を守るために必ずかぶりましょう。",
+    ng:"あぶない！ヘルメットなしの転倒は頭部への重大なダメージにつながります。全年齢で努力義務です。"
+  },
+  "事故対応":{
+    ok:"正解！事故のあとはまず相手の救護、そして警察・救急への連絡が義務です。逃げると「ひき逃げ」になります。",
+    ng:"あぶない！事故後に立ち去ることは「ひき逃げ」という重大な犯罪です。必ず止まって対応しましょう。"
+  },
+  "自転車保険":{
+    ok:"正解！自転車事故で億単位の賠償が必要になった例もあります。多くの自治体で保険加入が義務化されています。",
+    ng:"事故が起きてから後悔しないために、自転車保険への加入を確認しておきましょう。多くの自治体で義務化されています。"
+  }
+};
+
+function answer(j){
+ const x=data[cur];
+ const bs=document.querySelectorAll(".choice");
+ bs.forEach(b=>b.disabled=true);
+ const f=document.getElementById("feedback");
+ f.classList.remove("good","bad");
+ const fb=FEEDBACK[x[2]]||{ok:"正解！",ng:"あぶない！"};
+ if(j===x[8]){
+   bs[j].classList.add("correct");
+   f.textContent="✅ "+fb.ok;
+   f.classList.add("good");
+ }else{
+   bs[j].classList.add("wrong");
+   bs[x[8]].classList.add("correct");
+   f.textContent="⚠️ "+fb.ng;
+   f.classList.add("bad");
+ }
+ document.getElementById("result").classList.add("show");
+ setTimeout(()=>document.getElementById("result").scrollIntoView({behavior:"smooth",block:"start"}),120);
+}
+
+function move(d){show(cur+d)}
+build(); show(0);
+</script>
+</body>
+</html>
