@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ちゃり検</title>
+<style>
+:root{
+  --bg:#f7f8fa;
+  --surface:#ffffff;
+  --border:#e4e9ef;
+  --border-strong:#cdd4dc;
+  --text:#2a1f2e;
+  --muted:#6b7280;
+  --accent:#17288B;
+  --accent2:#3271d8;
+  --accent-light:#eef3ff;
+  --accent-cyan:#00DDFA;
+  --accent-cyan-light:#e6fafe;
+  --accent-yellow:#FADD00;
+  --accent-yellow-dark:#A59837;
+  --accent-purple:#7A3D5D;
+  --accent-teal:#3D737A;
+  --accent-orange:#FF6B00;
+  --accent-orange-light:#FFF3ED;
+  --correct:#3D737A;
+  --correct-light:#e8f4f5;
+  --wrong:#d95a5a;
+  --wrong-light:#fff0f0;
+  --r:12px;
+  --rs:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','BIZ UDPGothic',sans-serif;
+  background:var(--bg);color:var(--text);
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  padding:0 0 4rem;
+}
+
+/* ── ヘッダー ── */
+.site-header{
+  width:100%;background:var(--surface);
+  border-bottom:1px solid var(--border);
+  padding:0 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  height:56px;position:sticky;top:0;z-index:100;
+}
+.logo{font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.5px}
+.logo em{color:var(--accent2);font-style:normal}
+.user-row{display:flex;align-items:center;gap:10px}
+.avatar{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--accent-light);color:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;
+}
+.btn-sm{
+  font-size:12px;padding:5px 12px;
+  border:1px solid var(--border);border-radius:6px;
+  background:var(--surface);color:var(--muted);cursor:pointer;
+}
+.btn-sm:hover{background:var(--bg)}
+
+/* ── ラップ ── */
+.wrap{width:100%;max-width:720px;padding:20px 16px 0;}
+.screen{display:none;flex-direction:column;gap:14px}
+.screen.active{display:flex}
+
+/* ── カード ── */
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);padding:20px;
+}
+
+/* ── ログイン ── */
+.login-wrap{width:100%;max-width:420px;margin:0 auto}
+.login-title{font-size:22px;font-weight:700;margin-bottom:4px}
+.login-sub{font-size:14px;color:var(--muted);margin-bottom:20px}
+.form-lbl{font-size:13px;font-weight:600;margin-bottom:6px;display:block;color:var(--text)}
+.form-lbl span{font-size:11px;color:var(--muted);font-weight:400;margin-left:4px}
+.form-row{display:flex;gap:8px}
+.form-row .fg{flex:1;margin-bottom:0}
+.fg{margin-bottom:14px}
+input[type=text],input[type=number]{
+  width:100%;font-size:14px;padding:10px 12px;
+  border:1px solid var(--border);border-radius:var(--rs);
+  background:var(--surface);color:var(--text);
+  transition:border-color .15s;
+}
+input:focus{outline:none;border-color:var(--accent2);box-shadow:0 0 0 3px rgba(50,113,216,.1)}
+.btn-primary{
+  width:100%;font-size:15px;font-weight:700;padding:13px;
+  background:var(--accent);color:#fff;border:none;
+  border-radius:var(--rs);cursor:pointer;margin-top:4px;
+  transition:background .15s;
+}
+.btn-primary:hover{background:var(--accent2)}
+.login-note{
+  font-size:12px;color:var(--muted);padding:10px 12px;
+  background:var(--bg);border-radius:var(--rs);line-height:1.6;margin-top:10px;
+}
+
+/* ── イベントバナー ── */
+.event-banner{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);padding:16px 18px;
+}
+.event-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;gap:8px}
+.event-name{font-size:15px;font-weight:700;color:var(--text)}
+.event-date{font-size:12px;color:var(--muted);margin-top:3px}
+.pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;white-space:nowrap}
+.pill-amber{background:#fff3cd;color:#7c4f00}
+.pill-green{background:#d4edda;color:#1a6335}
+.prog-row{margin-bottom:8px}
+.prog-label{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:4px}
+.prog-label b{color:var(--text);font-weight:600}
+.prog-bar{height:6px;background:var(--bg);border-radius:3px;overflow:hidden;border:1px solid var(--border)}
+.prog-fill{height:100%;border-radius:3px}
+
+/* ── スコアバナー ── */
+.score-banner{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);padding:18px 20px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+}
+.score-lbl{font-size:12px;color:var(--muted);margin-bottom:4px}
+.score-num{font-size:36px;font-weight:700;color:var(--accent);letter-spacing:-1px;line-height:1}
+.score-max{font-size:13px;color:var(--muted);font-weight:400}
+.score-rank{
+  font-size:12px;color:#fff;margin-top:6px;font-weight:700;
+  background:var(--accent-orange);display:inline-block;padding:3px 10px;border-radius:20px;
+}
+.sb-rows{display:flex;flex-direction:column;gap:8px}
+.sb-row{display:flex;align-items:center;gap:8px}
+.sb-lbl{font-size:11px;color:var(--muted);width:48px}
+.sb-bar{width:90px;height:5px;background:var(--bg);border-radius:3px;overflow:hidden;border:1px solid var(--border)}
+.sb-fill{height:100%;border-radius:3px}
+.sb-val{font-size:12px;color:var(--text);min-width:28px;text-align:right;font-weight:600}
+
+/* ── ランキング ── */
+.ranking-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px}
+.card-title{font-size:14px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:6px;color:var(--text)}
+.cat-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.cat-tab{
+  font-size:11px;padding:4px 12px;border-radius:20px;
+  border:1px solid var(--border);background:var(--surface);
+  color:var(--muted);cursor:pointer;transition:all .15s;
+}
+.cat-tab.on{background:var(--accent-teal);color:#fff;border-color:var(--accent-teal)}
+.rank-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--border)}
+.rank-n{font-size:13px;font-weight:700;color:var(--muted);width:20px;text-align:center}
+.rank-av{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--accent-light);color:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;flex-shrink:0;
+}
+.rank-name{flex:1;font-size:14px;color:var(--text)}
+.rank-me{font-weight:700;color:var(--accent)}
+.rank-bar-w{width:80px}
+.rank-bar{height:4px;background:var(--bg);border-radius:2px;overflow:hidden;border:1px solid var(--border)}
+.rank-sc{font-size:13px;font-weight:700;min-width:36px;text-align:right;color:var(--text)}
+
+/* ── カテゴリ ── */
+.sec-lbl{font-size:13px;font-weight:700;color:var(--muted);margin-bottom:8px}
+.cats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.cat-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--rs);padding:12px;cursor:pointer;
+  transition:border-color .15s,box-shadow .15s;
+}
+.cat-card:hover{border-color:var(--accent2);box-shadow:0 2px 8px rgba(50,113,216,.1)}
+.cat-card.sel{border:2px solid var(--accent);background:var(--accent-light)}
+.cat-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.cat-name{font-size:13px;font-weight:600;color:var(--text)}
+.cat-cnt{font-size:11px;color:var(--muted)}
+.cat-bar{height:3px;background:var(--border);border-radius:2px;overflow:hidden}
+.cat-fill{height:100%;border-radius:2px}
+.cat-card.sel .cat-name{color:var(--accent)}
+
+/* ── レベル ── */
+.lv-row{display:flex;gap:6px}
+.lv{
+  flex:1;padding:9px 4px;border:1px solid var(--border);
+  border-radius:var(--rs);background:var(--surface);
+  font-size:13px;color:var(--muted);cursor:pointer;text-align:center;
+  transition:all .15s;
+}
+.lv.sel{background:var(--accent-teal);color:#fff;border-color:var(--accent-teal);font-weight:700}
+.lv.disabled{opacity:.4;cursor:default;pointer-events:none}
+
+.btn-big{
+  width:100%;padding:14px;background:var(--accent);color:#fff;
+  border:none;border-radius:var(--rs);font-size:15px;font-weight:700;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:background .15s;box-shadow:0 4px 12px rgba(250,0,128,.25);
+}
+.btn-big:hover{background:var(--accent2)}
+
+/* ── ドリル ── */
+.progress-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+.progress-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin-top:6px}
+.progress-fill{height:100%;background:var(--accent2);border-radius:3px;transition:width .4s}
+
+/* 問題カード */
+.q-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);overflow:hidden;
+}
+.q-head{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 18px;border-bottom:1px solid var(--border);
+  background:var(--bg);
+}
+.q-num{font-size:12px;color:var(--muted);font-weight:700}
+.badge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600}
+.badge-cat{background:var(--accent-cyan-light);color:var(--accent-teal);margin-left:auto;border:1px solid var(--accent-cyan)}
+.badge-lv{background:#f0f0f0;color:var(--muted)}
+
+/* イラストエリア */
+.q-illust{
+  width:100%;background:#f0f4f8;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;max-height:220px;
+}
+.q-illust img{
+  width:100%;max-height:220px;
+  object-fit:contain;display:block;
+}
+.q-illust-placeholder{
+  width:100%;height:120px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--muted);font-size:13px;
+}
+
+.q-body{padding:18px 18px 20px}
+.note{
+  font-size:12px;color:var(--muted);background:var(--bg);
+  border-radius:var(--rs);padding:7px 10px;margin-bottom:10px;line-height:1.6;
+  border-left:3px solid var(--accent-cyan);
+}
+.q-text{font-size:17px;line-height:1.8;margin-bottom:16px;font-weight:600;color:var(--text)}
+
+/* 選択肢 */
+.choices{display:flex;flex-direction:column;gap:8px}
+.choice-btn{
+  width:100%;text-align:left;font-size:14px;line-height:1.6;
+  padding:12px 14px;border:1.5px solid var(--border);
+  border-radius:var(--rs);background:var(--surface);color:var(--text);
+  cursor:pointer;transition:border-color .15s,background .15s;
+  display:flex;align-items:flex-start;gap:10px;
+}
+.choice-btn:hover:not(:disabled){
+  border-color:var(--accent2);background:var(--accent-light);
+}
+.choice-btn:disabled{cursor:default}
+.choice-btn.correct{border-color:var(--correct);background:var(--correct-light);color:var(--accent-teal)}
+.choice-btn.wrong{border-color:var(--wrong);background:var(--wrong-light);color:#a03030}
+.choice-lbl{
+  font-size:12px;font-weight:700;min-width:22px;padding-top:1px;
+  color:var(--muted);
+}
+.choice-btn.correct .choice-lbl{color:var(--correct)}
+.choice-btn.wrong .choice-lbl{color:var(--wrong)}
+
+/* フィードバック */
+.feedback{
+  margin-top:14px;padding:14px;border-radius:var(--rs);
+  font-size:14px;line-height:1.7;display:none;
+}
+.feedback.correct{background:var(--correct-light);color:var(--accent-teal);border:1px solid var(--correct)}
+.feedback.wrong{background:var(--wrong-light);color:#a03030;border:1px solid #f5b8b8}
+.fb-title{font-weight:700;margin-bottom:5px;font-size:15px}
+.law-ref{font-size:12px;margin-top:8px;color:var(--muted)}
+.pts-badge{
+  display:inline-block;font-size:12px;font-weight:700;
+  padding:3px 10px;border-radius:20px;
+  background:var(--accent-cyan-light);color:var(--accent-teal);margin-top:8px;border:1px solid var(--accent-cyan);
+}
+
+/* 写真エリア（ローカル問題） */
+.q-photo-wrap{margin-bottom:0}
+.q-photo{
+  width:100%;max-height:220px;object-fit:contain;display:block;
+  background:#f0f4f8;
+}
+.q-location{font-size:11px;color:var(--muted);padding:4px 18px;background:var(--bg);border-bottom:1px solid var(--border)}
+
+.nav-area{display:flex;justify-content:flex-end;padding:0 18px 18px}
+.btn-next{
+  font-size:14px;font-weight:700;padding:10px 28px;
+  background:var(--accent);color:#fff;border:none;
+  border-radius:var(--rs);cursor:pointer;display:none;
+  transition:background .15s;
+}
+.btn-next:hover{background:var(--accent2)}
+
+/* ── 結果 ── */
+.result-wrap{text-align:center;padding:2rem 1.5rem}
+.result-title{font-size:24px;font-weight:700;margin-bottom:6px;color:var(--text)}
+.result-sub{font-size:14px;color:var(--muted);margin-bottom:1.5rem}
+.result-score{font-size:52px;font-weight:700;color:var(--accent2);letter-spacing:-2px;margin-bottom:4px}
+.result-score-lbl{font-size:13px;color:var(--muted);margin-bottom:1.5rem}
+.result-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem}
+.stat-box{background:var(--bg);border-radius:var(--rs);padding:.75rem;border:1px solid var(--border)}
+.stat-val{font-size:22px;font-weight:700;color:var(--text)}
+.stat-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+.btn-home{
+  font-size:14px;font-weight:700;padding:12px 32px;
+  background:var(--accent);color:#fff;border:none;
+  border-radius:var(--rs);cursor:pointer;transition:background .15s;
+}
+.btn-home:hover{background:var(--accent2)}
+
+/* ── ユーティリティ ── */
+.error-msg{
+  font-size:14px;padding:10px 14px;
+  background:var(--wrong-light);color:var(--wrong);
+  border-radius:var(--rs);border:1px solid #f5b8b8;display:none;
+}
+.loading{color:var(--muted);font-size:14px;padding:3rem;text-align:center;display:none}
+.no-event{
+  font-size:14px;color:var(--muted);padding:1.5rem;text-align:center;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+}
+
+/* ── レベルバナー ── */
+.lv-banner{
+  background:var(--accent);
+  border-radius:var(--r);padding:16px 20px;color:#fff;
+}
+.lv-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.lv-badge{font-size:11px;font-weight:700;background:rgba(255,255,255,.2);padding:3px 10px;border-radius:20px;letter-spacing:.04em}
+.lv-name{font-size:18px;font-weight:700;margin-top:2px}
+.lv-exp-row{display:flex;align-items:center;gap:8px;font-size:12px;opacity:.85;margin-bottom:6px}
+.lv-exp-bar{flex:1;height:6px;background:rgba(255,255,255,.25);border-radius:3px;overflow:hidden}
+.lv-exp-fill{height:100%;background:#FADD00;border-radius:3px;transition:width .6s ease}
+.lv-next{font-size:11px;opacity:.75;text-align:right;margin-top:2px}
+.lv-total-exp{font-size:11px;opacity:.75}
+
+/* ── モード選択 ── */
+.mode-section{margin-bottom:4px}
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mode-card{
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--r);padding:14px;cursor:pointer;
+  transition:border-color .15s,box-shadow .15s;position:relative;
+  display:flex;flex-direction:column;gap:4px;
+}
+.mode-card:hover:not(.locked){border-color:var(--accent);box-shadow:0 2px 10px rgba(250,0,128,.12)}
+.mode-card.locked{opacity:.55;cursor:default;filter:grayscale(.3)}
+.mode-icon{font-size:22px;margin-bottom:2px}
+.mode-name{font-size:14px;font-weight:700;color:var(--text)}
+.mode-desc{font-size:11px;color:var(--muted);line-height:1.5}
+.mode-badge{
+  font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;
+  background:var(--accent-light);color:var(--accent);
+  display:inline-block;margin-top:2px;align-self:flex-start;
+  border:1px solid var(--accent);
+}
+.mode-badge.exp{background:var(--accent-orange-light);color:var(--accent-orange);border-color:var(--accent-orange)}
+.mode-badge.locked-badge{background:#f0f0f0;color:var(--muted)}
+.lock-icon{position:absolute;top:10px;right:10px;font-size:16px;opacity:.5}
+
+/* ── おすすめカテゴリ ── */
+.recommend-card{
+  background:var(--surface);
+  border-left:4px solid var(--accent-orange);
+  border-top:0.5px solid var(--border);
+  border-right:0.5px solid var(--border);
+  border-bottom:0.5px solid var(--border);
+  border-radius:var(--r);padding:14px 16px;
+  cursor:pointer;transition:box-shadow .15s;
+}
+.recommend-card:hover{box-shadow:0 2px 12px rgba(255,107,0,.12)}
+.recommend-top{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.recommend-label{font-size:11px;font-weight:700;color:#fff;background:var(--accent-orange);padding:2px 8px;border-radius:20px}
+.recommend-cat{font-size:15px;font-weight:700;color:var(--text)}
+.recommend-sub{font-size:12px;color:var(--muted)}
+.recommend-exp{font-size:12px;font-weight:700;color:var(--accent-orange);margin-top:4px}
+
+/* ── カテゴリグリッド（ホーム用） ── */
+.home-cats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.home-cat-card{
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--rs);padding:12px;cursor:pointer;
+  transition:border-color .15s,box-shadow .15s;
+}
+.home-cat-card:hover{border-color:var(--accent2);box-shadow:0 2px 8px rgba(50,113,216,.1)}
+.home-cat-card.sel{border:2px solid var(--accent);background:var(--accent-light)}
+.hcc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.hcc-name{font-size:13px;font-weight:600;color:var(--text)}
+.hcc-pct{font-size:12px;font-weight:700}
+.hcc-pct.good{color:var(--correct)}
+.hcc-pct.mid{color:#e09b1f}
+.hcc-pct.bad{color:var(--wrong)}
+.hcc-bar{height:3px;background:var(--border);border-radius:2px;overflow:hidden}
+.hcc-fill{height:100%;border-radius:2px}
+
+/* ── 復習ボタン ── */
+.review-btn{
+  width:100%;padding:12px 16px;
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--r);cursor:pointer;
+  display:flex;align-items:center;gap:12px;
+  transition:border-color .15s,box-shadow .15s;text-align:left;
+}
+.review-btn:hover{border-color:var(--accent2);box-shadow:0 2px 8px rgba(50,113,216,.1)}
+.review-icon{font-size:22px}
+.review-text{flex:1}
+.review-title{font-size:14px;font-weight:700;color:var(--text)}
+.review-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.review-badge{font-size:11px;font-weight:700;background:#fff0f0;color:var(--wrong);padding:2px 8px;border-radius:20px;white-space:nowrap}
+
+/* ── 自転車プログレスバー ── */
+.bike-progress-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--rs);padding:10px 14px}
+.bike-progress-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px}
+.bike-track{position:relative;height:36px;background:var(--bg);border-radius:8px;overflow:hidden;border:1px solid var(--border)}
+.bike-road{position:absolute;bottom:0;left:0;right:0;height:4px;background:#c8d8e8}
+.bike-fill{
+  position:absolute;bottom:0;left:0;height:4px;
+  background:var(--accent-cyan);
+  border-radius:4px;transition:width .5s cubic-bezier(.4,0,.2,1);
+}
+.bike-svg{
+  position:absolute;bottom:4px;
+  transition:left .5s cubic-bezier(.4,0,.2,1);
+  width:36px;height:28px;
+}
+.bike-goal{position:absolute;right:6px;bottom:4px;font-size:18px;line-height:1}
+.bike-streak{font-size:11px;color:var(--accent-orange);font-weight:700;margin-top:4px;min-height:16px}
+
+/* ── レベルアップ演出 ── */
+.levelup-overlay{
+  position:fixed;inset:0;z-index:9999;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.5);backdrop-filter:blur(4px);
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.levelup-overlay.show{opacity:1;pointer-events:auto}
+.levelup-box{
+  background:#fff;border-radius:20px;padding:32px 40px;text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,.3);
+  transform:scale(.8);transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+  max-width:320px;width:90%;
+}
+.levelup-overlay.show .levelup-box{transform:scale(1)}
+.levelup-stars{font-size:40px;margin-bottom:8px;animation:spin-stars 1s ease-out}
+@keyframes spin-stars{0%{transform:rotate(-20deg) scale(.5)}100%{transform:rotate(0) scale(1)}}
+.levelup-title{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
+.levelup-lv{font-size:48px;font-weight:700;color:var(--accent);letter-spacing:-2px;line-height:1}
+.levelup-name{font-size:18px;font-weight:700;color:var(--text);margin-top:4px;margin-bottom:12px}
+.levelup-unlock{font-size:13px;color:var(--accent-teal);background:var(--correct-light);border-radius:var(--rs);padding:8px 14px;margin-bottom:16px;font-weight:600;border:1px solid var(--correct)}
+.levelup-btn{
+  padding:10px 28px;background:var(--accent);color:#fff;
+  border:none;border-radius:var(--rs);font-size:14px;font-weight:700;cursor:pointer;
+}
+.confetti-piece{
+  position:fixed;width:8px;height:8px;border-radius:2px;
+  animation:confetti-fall 1.5s ease-in forwards;
+  pointer-events:none;z-index:10000;
+}
+@keyframes confetti-fall{
+  0%{transform:translateY(-20px) rotate(0deg);opacity:1}
+  100%{transform:translateY(100vh) rotate(720deg);opacity:0}
+}
+
+/* ── EXPバッジ（ドリル中） ── */
+.pts-badge{
+  display:inline-block;font-size:12px;font-weight:700;
+  padding:3px 10px;border-radius:20px;
+  background:var(--accent-cyan-light);color:var(--accent-teal);margin-top:8px;border:1px solid var(--accent-cyan);
+}
+.pts-badge.bonus{background:var(--accent-orange-light);color:var(--accent-orange);border-color:var(--accent-orange)}
+
+/* ── 結果画面EXP ── */
+.result-exp{
+  font-size:52px;font-weight:700;color:var(--accent-orange);letter-spacing:-2px;margin-bottom:4px;
+}
+.result-exp-lbl{font-size:13px;color:var(--muted);margin-bottom:1.5rem}
+.result-exp-detail{font-size:12px;color:var(--muted);margin-bottom:1.5rem;line-height:1.8}
+
+/* ── PC・タブレット：ホームを2カラムに ── */
+.home-side,.home-main{display:flex;flex-direction:column;gap:14px;min-width:0}
+@media (min-width:900px){
+  body:has(#screen-home.active) .wrap{max-width:1120px;padding:28px 32px 0}
+  #screen-home.active{display:grid;grid-template-columns:380px minmax(0,1fr);gap:28px;align-items:start}
+  #screen-home .home-side{position:sticky;top:76px}
+  #screen-home .mode-grid{gap:14px}
+  #screen-home .home-cats-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media (min-width:1280px){
+  body:has(#screen-home.active) .wrap{max-width:1240px}
+  #screen-home.active{grid-template-columns:420px minmax(0,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- ヘッダー -->
+<header class="site-header">
+  <a href="index.html" class="logo" style="text-decoration:none;color:inherit">ちゃり<em>検</em></a>
+  <div class="user-row" id="user-row" style="display:none">
+    <span style="font-size:13px;color:var(--muted)" id="user-name-disp"></span>
+    <div class="avatar" id="user-avatar"></div>
+    <button class="btn-sm" onclick="logout()">ログアウト</button>
+  </div>
+</header>
+
+<div class="wrap">
+<div class="error-msg" id="error-msg"></div>
+<div class="loading" id="loading">読み込み中...</div>
+
+<!-- ── ログイン ── -->
+<div class="screen active" id="screen-login">
+  <div class="login-wrap">
+    <div class="card">
+      <div class="login-title" id="login-title">はじめる</div>
+      <div class="login-sub" id="login-sub">学校コードと情報を入力してください</div>
+
+      <!-- 通常モード：school/grade/class を手入力 -->
+      <div id="login-full-fields">
+        <div class="fg">
+          <label class="form-lbl">学校コード</label>
+          <input type="text" id="school-code" placeholder="例：CHOFU001" style="text-transform:uppercase">
+        </div>
+        <div class="form-row">
+          <div class="fg"><label class="form-lbl">学年</label><input type="number" id="grade" min="1" max="6" placeholder="2"></div>
+          <div class="fg"><label class="form-lbl">クラス</label><input type="number" id="class-num" min="1" max="20" placeholder="3"></div>
+          <div class="fg"><label class="form-lbl">出席番号</label><input type="number" id="student-num" min="1" max="50" placeholder="6"></div>
+        </div>
+      </div>
+
+      <!-- デモモード：school/grade/class はURL固定、出席番号だけ入力 -->
+      <div id="login-demo-fields" style="display:none">
+        <div class="fg">
+          <label class="form-lbl">出席番号</label>
+          <input type="number" id="student-num-demo" min="1" max="50" placeholder="1">
+        </div>
+      </div>
+
+      <div class="fg">
+        <label class="form-lbl">ニックネーム <span>表示名・自由に決めてOK</span></label>
+        <input type="text" id="nickname" placeholder="例：むた" maxlength="20">
+      </div>
+      <button class="btn-primary" onclick="login()">スタート →</button>
+      <div class="login-note">📌 名前やメールアドレスは不要です。個人情報は登録しません。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── ホーム ── -->
+<div class="screen" id="screen-home">
+<div class="home-side">
+
+  <!-- レベルバナー -->
+  <div class="lv-banner">
+    <div class="lv-top">
+      <div>
+        <div class="lv-badge" id="lv-badge">Lv.1</div>
+        <div class="lv-name" id="lv-name">見習いライダー 🚲</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:22px;font-weight:700;letter-spacing:-1px;color:#FADD00" id="lv-exp-disp">0</div>
+        <div class="lv-total-exp">累積 EXP</div>
+      </div>
+    </div>
+    <div class="lv-exp-row">
+      <span id="lv-exp-cur">0</span>
+      <div class="lv-exp-bar"><div class="lv-exp-fill" id="lv-exp-fill" style="width:0%"></div></div>
+      <span id="lv-exp-max">500</span>
+    </div>
+    <div class="lv-next" id="lv-next" style="opacity:.8">次のレベルまで 500 EXP</div>
+  </div>
+
+  <!-- イベント -->
+  <div id="event-area"></div>
+
+  <!-- 場面で学ぶバナー -->
+  <a href="safety.html" style="display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--surface);border-radius:12px;text-decoration:none;border-left:4px solid #00DDFA;border-top:0.5px solid var(--border);border-right:0.5px solid var(--border);border-bottom:0.5px solid var(--border);transition:box-shadow .15s" onmouseover="this.style.boxShadow='0 2px 12px rgba(0,221,250,.15)'" onmouseout="this.style.boxShadow=''">
+    <div style="font-size:28px;line-height:1">🚦</div>
+    <div style="flex:1">
+      <div style="font-size:10px;font-weight:700;color:#3D737A;letter-spacing:.06em;margin-bottom:2px">まず読んで学ぼう</div>
+      <div style="font-size:14px;font-weight:700;color:var(--text)">場面で学ぶ｜自転車交通安全 18のルール</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px">こんなときどうする？！危険な場面をイラストで確認</div>
+    </div>
+    <div style="font-size:16px;color:#3D737A;font-weight:700">→</div>
+  </a>
+
+  <!-- スコアバナー -->
+  <div class="score-banner" id="score-banner" style="display:none">
+    <div>
+      <div class="score-lbl">あなたのスコア</div>
+      <div class="score-num" id="score-num">0<span class="score-max"> / 1000</span></div>
+      <div class="score-rank" id="score-rank"></div>
+    </div>
+    <div class="sb-rows">
+      <div class="sb-row">
+        <div class="sb-lbl">理解度</div>
+        <div class="sb-bar"><div class="sb-fill" id="sb-theta" style="background:#7F77DD"></div></div>
+        <div class="sb-val" id="sbv-theta">0</div>
+      </div>
+      <div class="sb-row">
+        <div class="sb-lbl">正答率</div>
+        <div class="sb-bar"><div class="sb-fill" id="sb-acc" style="background:#2a9d63"></div></div>
+        <div class="sb-val" id="sbv-acc">0</div>
+      </div>
+      <div class="sb-row">
+        <div class="sb-lbl">問題数</div>
+        <div class="sb-bar"><div class="sb-fill" id="sb-vol" style="background:#e09b1f"></div></div>
+        <div class="sb-val" id="sbv-vol">0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ランキング -->
+  <div class="ranking-card" id="ranking-area" style="display:none">
+    <div class="card-title">🏆 ランキング（<span id="class-label"></span>）</div>
+    <div class="cat-tabs" id="rank-tabs"></div>
+    <div id="rank-list"></div>
+  </div>
+
+</div><!-- /home-side -->
+<div class="home-main">
+  <!-- モード選択 -->
+  <div class="mode-section">
+    <div class="sec-lbl">モードを選ぶ</div>
+    <div class="mode-grid">
+      <div class="mode-card" id="mode-normal" onclick="selectMode('normal')">
+        <div class="mode-icon">🎯</div>
+        <div class="mode-name">通常ドリル</div>
+        <div class="mode-desc">7問・カテゴリ選択あり</div>
+        <div class="mode-badge">Lv.1〜</div>
+      </div>
+      <div class="mode-card" id="mode-review" onclick="selectMode('review')">
+        <div class="mode-icon">🔁</div>
+        <div class="mode-name">復習モード</div>
+        <div class="mode-desc">まちがえた問題を集中練習</div>
+        <div class="mode-badge exp" id="review-badge">Lv.2〜解放</div>
+      </div>
+      <div class="mode-card" id="mode-long" onclick="selectMode('long')">
+        <div class="mode-icon">🏃</div>
+        <div class="mode-name">長距離ドリル</div>
+        <div class="mode-desc">15問・EXP 1.2倍</div>
+        <div class="mode-badge exp" id="long-badge">Lv.3〜解放</div>
+      </div>
+      <div class="mode-card" id="mode-endless" onclick="selectMode('endless')">
+        <div class="mode-icon">♾️</div>
+        <div class="mode-name">エンドレス</div>
+        <div class="mode-desc">自分でやめるまで挑戦！</div>
+        <div class="mode-badge exp" id="endless-badge">Lv.4〜解放</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 復習ボタン（復習モード選択時） -->
+  <div id="review-info" style="display:none">
+    <button class="review-btn" onclick="startDrill()">
+      <div class="review-icon">🔁</div>
+      <div class="review-text">
+        <div class="review-title">まちがえた問題を復習する</div>
+        <div class="review-sub" id="review-sub">過去の不正解問題を練習</div>
+      </div>
+      <div class="review-badge" id="review-count-badge">0問</div>
+    </button>
+  </div>
+
+  <!-- おすすめカテゴリ -->
+  <div id="recommend-area" style="display:none">
+    <div class="sec-lbl">✨ 今日のおすすめ（EXP 1.5倍）</div>
+    <div class="recommend-card" id="recommend-card" onclick="selectRecommend()">
+      <div class="recommend-top">
+        <div class="recommend-label">苦手を克服</div>
+        <div class="recommend-cat" id="recommend-cat-name">—</div>
+      </div>
+      <div class="recommend-sub" id="recommend-sub">正答率を計算中...</div>
+      <div class="recommend-exp">⚡ このカテゴリを選ぶと EXP 1.5倍！</div>
+    </div>
+  </div>
+
+  <!-- カテゴリ選択（通常・長距離モード時） -->
+  <div id="cat-select-area" style="display:none">
+    <div class="sec-lbl">カテゴリを選ぶ</div>
+    <div class="home-cats-grid" id="home-cats-grid"></div>
+  </div>
+
+  <!-- fixed_level表示（イベントで固定中のみ） -->
+  <div id="lv-area" style="display:none">
+    <div class="sec-lbl">レベル（イベントで固定中）</div>
+    <div class="lv-row" id="lv-row">
+      <div class="lv sel" data-lv="all" onclick="selectLevel(this)">すべて</div>
+      <div class="lv" data-lv="easy" onclick="selectLevel(this)">やさしい</div>
+      <div class="lv" data-lv="mid" onclick="selectLevel(this)">ふつう</div>
+      <div class="lv" data-lv="hard" onclick="selectLevel(this)">むずかしい</div>
+    </div>
+  </div>
+
+  <button class="btn-big" onclick="startDrill()" id="btn-start-drill">
+    ▶ ドリルをはじめる
+  </button>
+</div><!-- /home-main -->
+</div>
+
+<!-- ── ドリル ── -->
+<div class="screen" id="screen-drill">
+  <div class="bike-progress-wrap">
+    <div class="bike-progress-meta">
+      <span id="progress-text">1問目</span>
+      <span id="progress-pct">スタート！</span>
+    </div>
+    <div class="bike-track">
+      <div class="bike-road"></div>
+      <div class="bike-fill" id="bike-fill" style="width:0%"></div>
+      <svg class="bike-svg" id="bike-svg" style="left:0px" viewBox="0 0 36 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- 後輪 -->
+        <circle cx="8" cy="22" r="5.5" stroke="#17288B" stroke-width="2" fill="white"/>
+        <circle cx="8" cy="22" r="1.5" fill="#17288B"/>
+        <!-- 前輪 -->
+        <circle cx="28" cy="22" r="5.5" stroke="#17288B" stroke-width="2" fill="white"/>
+        <circle cx="28" cy="22" r="1.5" fill="#17288B"/>
+        <!-- フレーム -->
+        <line x1="8" y1="22" x2="18" y2="10" stroke="#3271d8" stroke-width="2" stroke-linecap="round"/>
+        <line x1="18" y1="10" x2="28" y2="22" stroke="#3271d8" stroke-width="2" stroke-linecap="round"/>
+        <line x1="8" y1="22" x2="22" y2="16" stroke="#3271d8" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- サドル -->
+        <line x1="16" y1="10" x2="20" y2="10" stroke="#17288B" stroke-width="2" stroke-linecap="round"/>
+        <line x1="18" y1="10" x2="18" y2="14" stroke="#17288B" stroke-width="1.5"/>
+        <!-- ハンドル -->
+        <line x1="26" y1="12" x2="30" y2="12" stroke="#17288B" stroke-width="2" stroke-linecap="round"/>
+        <line x1="28" y1="12" x2="28" y2="16" stroke="#17288B" stroke-width="1.5"/>
+        <!-- ペダル（アニメーション） -->
+        <circle cx="18" cy="18" r="2" fill="#e09b1f"/>
+        <line x1="18" y1="18" x2="22" y2="20" stroke="#e09b1f" stroke-width="1.5" stroke-linecap="round" id="pedal-line"/>
+        <!-- ライダー -->
+        <circle cx="20" cy="7" r="3" fill="#17288B"/>
+        <line x1="20" y1="10" x2="18" y2="14" stroke="#17288B" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <div class="bike-goal">🏁</div>
+    </div>
+    <div class="bike-streak" id="bike-streak"></div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-head">
+      <span class="q-num" id="q-num">Q1</span>
+      <span class="badge badge-lv" id="diff-badge">やさしい</span>
+      <span class="badge badge-cat" id="cat-badge">カテゴリ</span>
+    </div>
+
+    <!-- 写真（ローカル問題） -->
+    <div id="q-photo-wrap" style="display:none">
+      <img id="q-photo" class="q-photo" src="" alt="問題の写真">
+      <div id="q-location" class="q-location"></div>
+    </div>
+
+    <!-- イラスト（イラスト屋さん） -->
+    <div class="q-illust" id="q-illust" style="display:none">
+      <img id="q-illust-img" src="" alt="イラスト">
+    </div>
+
+    <div class="q-body">
+      <div class="note" id="q-note" style="display:none"></div>
+      <div class="q-text" id="q-text"></div>
+      <div class="choices" id="choices"></div>
+      <div class="feedback" id="feedback">
+        <div class="fb-title" id="fb-title"></div>
+        <div id="fb-body"></div>
+        <div class="law-ref" id="fb-law"></div>
+        <div class="pts-badge" id="pts-badge" style="display:none"></div>
+      </div>
+    </div>
+    <div class="nav-area" style="gap:8px">
+      <button class="btn-next" id="btn-stop-endless" onclick="stopEndless()" style="display:none;background:var(--muted)">✋ ここでやめる</button>
+      <button class="btn-next" id="btn-next" onclick="nextQuestion()">次の問題 →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── 結果 ── -->
+<div class="screen" id="screen-result">
+  <div class="card">
+    <div class="result-wrap">
+      <div class="result-title" id="result-title">ドリル完了！</div>
+      <div class="result-sub" id="result-sub"></div>
+      <div class="result-exp" id="result-score">+0</div>
+      <div class="result-exp-lbl">獲得 EXP</div>
+      <div class="result-exp-detail" id="result-exp-detail"></div>
+      <div class="result-stats">
+        <div class="stat-box"><div class="stat-val" id="res-correct">0/0</div><div class="stat-lbl">正解/問題数</div></div>
+        <div class="stat-box"><div class="stat-val" id="res-pct">0%</div><div class="stat-lbl">正答率</div></div>
+        <div class="stat-box"><div class="stat-val" id="res-theta">0.00</div><div class="stat-lbl">理解度 θ</div></div>
+      </div>
+      <button class="btn-home" onclick="goHome()">ホームに戻る</button>
+    </div>
+  </div>
+</div>
+
+<!-- レベルアップ演出 -->
+<div class="levelup-overlay" id="levelup-overlay">
+  <div class="levelup-box">
+    <div class="levelup-stars">⭐🌟⭐</div>
+    <div class="levelup-title">Level Up!</div>
+    <div class="levelup-lv" id="lu-lv">2</div>
+    <div class="levelup-name" id="lu-name">安全ライダー 🚴</div>
+    <div class="levelup-unlock" id="lu-unlock">🔓 復習モードが解放されました！</div>
+    <button class="levelup-btn" onclick="closeLevelUp()">やった！</button>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+// ── URLパラメータ読み取り（デモモード） ──
+let DEMO_PARAMS = null;
+(function(){
+  const p = new URLSearchParams(location.search);
+  const sc = p.get('school');
+  const gr = p.get('grade');
+  const cl = p.get('class');
+  if(sc && gr && cl){
+    DEMO_PARAMS = {school: sc.toUpperCase(), grade: parseInt(gr), class_num: parseInt(cl)};
+  }
+})();
+
+function initLoginScreen(){
+  if(!DEMO_PARAMS) return;
+  // デモモード：タイトル変更・フィールド切り替え
+  document.getElementById('login-title').textContent = 'ちゃり検 体験';
+  document.getElementById('login-sub').textContent = '出席番号を入れて、ニックネームを決めてね！';
+  document.getElementById('login-full-fields').style.display = 'none';
+  document.getElementById('login-demo-fields').style.display = 'block';
+  // ニックネームにフォーカス（Suheさんが出席番号を入れたあと渡す想定）
+  setTimeout(()=>document.getElementById('nickname').focus(), 300);
+}
+document.addEventListener('DOMContentLoaded', initLoginScreen);
+
+const SUPABASE_URL='https://hwxreikopltisfoimuzf.supabase.co';
+const SUPABASE_KEY='sb_publishable_IibWbT-1J9MeXGN5XkJfMw_PqsRfgsi';
+
+// ── SE設定 ──
+const KIDS_MODE = new URLSearchParams(location.search).get("mode")==="kids";
+const QSTATUS = KIDS_MODE ? "kids" : "active";
+const SE_THRESHOLD = 0.40;
+const DRILL_MIN = 3;
+
+// ── レベル設定 ──
+const LEVELS=[
+  {lv:1,name:'見習いライダー 🚲',    expNeeded:0,    nextExp:500,  unlock:'通常ドリル'},
+  {lv:2,name:'安全ライダー 🚴',      expNeeded:500,  nextExp:1500, unlock:'復習モードが解放されました！'},
+  {lv:3,name:'ルールマスター 🏅',    expNeeded:1500, nextExp:3500, unlock:'長距離ドリル（15問）が解放されました！'},
+  {lv:4,name:'交通安全の達人 🎖️',   expNeeded:3500, nextExp:7000, unlock:'エンドレスモードが解放されました！'},
+  {lv:5,name:'ちゃり検レジェンド 👑',expNeeded:7000, nextExp:null, unlock:'全モード解放済み！'},
+];
+function getLevelInfo(exp){
+  let cur=LEVELS[0];
+  for(const l of LEVELS){ if(exp>=l.expNeeded) cur=l; }
+  return cur;
+}
+
+// ── モード設定 ──
+// mode: 'normal'=7問, 'review'=復習, 'long'=15問, 'endless'=無制限
+const MODE_CONFIG={
+  normal: {maxQ:7,  expMult:1.0, minQ:3},
+  review: {maxQ:7,  expMult:1.3, minQ:3},
+  long:   {maxQ:15, expMult:1.2, minQ:5},
+  endless:{maxQ:999,expMult:1.1, minQ:1},
+};
+
+const CATS=[
+  {name:'走行ルール',color:'#3271d8',cnt:6},
+  {name:'信号機の種類',color:'#e09b1f',cnt:6},
+  {name:'道路標識',color:'#2a9d63',cnt:6},
+  {name:'危険行為禁止',color:'#d95a5a',cnt:5},
+  {name:'走行判断',color:'#7F77DD',cnt:5},
+  {name:'事故対応',color:'#687787',cnt:3},
+  {name:'安全対策',color:'#c45e8a',cnt:5},
+  {name:'青切符・法律',color:'#a05c2a',cnt:4},
+  {name:'自転車マナー',color:'#2a8a9d',cnt:7},
+  {name:'自転車整備・安全',color:'#5a7dd9',cnt:6},
+];
+
+// ─── イラストマッピング ───
+// assets/illust/fig01.png ～ fig37.png
+// fig01 = 自転車に乗る男子学生（通常走行・左向き）
+// fig02 = 自転車に乗る女子学生（通常走行・左向き）
+// fig03 = 自転車を押して歩く男
+// fig04 = 自転車に乗る男の後ろ姿
+// fig05 = イヤホンをして自転車に乗る男
+// fig06 = スマホ見ながら自転車に乗る女
+// fig07 = 傘を差しながら自転車に乗る男
+// fig08 = 自転車のタイヤに空気を入れる男（整備）
+// fig09 = 自転車専用レーンを走る男子
+// fig10 = 歩道を走り周りが迷惑している男
+// fig11 = 車道の左側を走る男（正しい走行）
+// fig12 = 自転車専用レーン（道路）
+// fig13 = 赤信号を無視して走る男子
+// fig14 = 女の人にぶつかりそうになる男子
+// fig15 = こけそうになる男子
+// fig16 = 飲酒運転をする男
+// fig17 = 飛び出して車にはねられそうになる男子
+// fig18 = 夜間・ライトをつけて走る男子（正しい）
+// fig19 = 夜間・無灯火で走る男子
+// fig20～25 = 交差点・道路・車のイラスト
+// fig26～33 = 信号機（各色・矢印）のイラスト
+// fig34 = 徐行の標識
+// fig35 = 止まれの標識
+// fig36 = 二人乗りのイラスト
+// fig37 = 二段階右折のイラスト
+
+const ASSETS = 'assets/illust/';
+
+const ILLUST_MAP = [
+  // ながら運転系（最優先：問題文に明示）
+  {keys:['スマホ','ながら運転','携帯','スマートフォン'], file:'fig06.png'},
+  {keys:['傘','傘さし','雨の日'],                        file:'fig07.png'},
+  {keys:['イヤホン','ヘッドフォン'],                     file:'fig05.png'},
+  // 禁止行為系
+  {keys:['二人乗り','2人乗り','友だちと1台'],            file:'fig36.png'},
+  {keys:['飲酒','お酒','酒酔い'],                        file:'fig16.png'},
+  {keys:['信号を無視','信号無視','赤信号を'],            file:'fig13.png'},
+  // 走行場所・方向系
+  {keys:['二段階右折','右折するとき'],                   file:'fig11.png'},
+  {keys:['歩道を自転車','歩道で歩行者'],                 file:'fig10.png'},
+  {keys:['並んで走','2台並','並進'],                     file:'fig11.png'},
+  {keys:['道路の左側','車道の左','どこを走'],            file:'fig11.png'},
+  {keys:['押しながら渡','押して歩'],                     file:'fig03.png'},
+  {keys:['逆から走','一方通行'],                         file:'fig04.png'},
+  // 夜間・ライト系
+  {keys:['無灯火','ライトをつけず'],                     file:'fig19.png'},
+  {keys:['夜','ライト','反射材','リフレクター'],          file:'fig18.png'},
+  // 整備系
+  {keys:['ブレーキ','タイヤがすり','空気がぺった'],      file:'fig08.png'},
+  {keys:['サンダル','足がペダル'],                       file:'fig15.png'},
+  {keys:['ヘルメット'],                                  file:'fig15.png'},
+  {keys:['荷物','荷台'],                                 file:'fig15.png'},
+  // 事故系
+  {keys:['ぶつかった','ぶつかって','人にぶつか','逃げて','ひき逃げ'], file:'fig14.png'},
+  {keys:['警察','事故後'],                               file:'fig17.png'},
+  // 歩行者優先系
+  {keys:['歩行者が前','歩行者グループ','歩行者のすぐ'],  file:'fig10.png'},
+  {keys:['横断歩道'],                                    file:'fig03.png'},
+  // 信号系
+  {keys:['赤信号','黄色の信号','点滅信号','自転車専用の信号'], file:'fig13.png'},
+  // 標識系
+  {keys:['通行止め','自転車通行可','自転車専用','自動車専用'], file:'fig34.png'},
+  {keys:['止まれ'],                                      file:'fig35.png'},
+  // 青切符系
+  {keys:['青切符','反則金','赤切符'],                    file:'fig13.png'},
+];
+
+function getIllust(q){
+  const text = (q.question_text||'') + (q.category||'') + JSON.stringify(q.tags||[]);
+  for(const m of ILLUST_MAP){
+    if(m.keys.some(k=>text.includes(k))){
+      return ASSETS + m.file;
+    }
+  }
+  // デフォルト：カテゴリ別
+  const cat = q.category||'';
+  if(cat.includes('信号'))  return ASSETS + 'fig13.png';
+  if(cat.includes('標識'))  return ASSETS + 'fig34.png';
+  if(cat.includes('整備'))  return ASSETS + 'fig08.png';
+  if(cat.includes('マナー'))return ASSETS + 'fig10.png';
+  if(cat.includes('危険'))  return ASSETS + 'fig06.png';
+  if(cat.includes('事故'))  return ASSETS + 'fig14.png';
+  if(cat.includes('走行'))  return ASSETS + 'fig01.png';
+  if(cat.includes('安全'))  return ASSETS + 'fig01.png';
+  if(cat.includes('青切符'))return ASSETS + 'fig13.png';
+  return ASSETS + 'fig01.png';
+}
+
+let currentUser=null,currentEvent=null,eventScore=null;
+let questions=[],questionPool=[],currentIdx=0,answered=false;
+let theta=0,se=1.0,correctCount=0,totalAnswered=0,sessionPoints=0;
+let selectedCat='all',selectedLevel='all';
+let currentMode='normal',expMultiplier=1.0,isRecommendCat=false;
+let streakCount=0,wrongQuestionIds=[];
+let bikeAnimFrame=null;
+
+function api(path,opts={}){
+  return fetch(SUPABASE_URL+path,{...opts,headers:{
+    'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,
+    'Content-Type':'application/json','Prefer':'return=representation',
+    ...(opts.headers||{})
+  }});
+}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function showError(msg){const el=document.getElementById('error-msg');el.textContent=msg;el.style.display='block';setTimeout(()=>el.style.display='none',4000)}
+function showLoading(v){document.getElementById('loading').style.display=v?'block':'none'}
+
+function calcEXP(a,b,th,correct){
+  const p=1/(1+Math.exp(-1.7*a*(th-b)));
+  const info=1.7*1.7*a*a*p*(1-p);
+  const base=correct?Math.round(info*100):Math.round(info*20);
+  return Math.round(base*expMultiplier*(isRecommendCat?1.5:1.0));
+}
+// 後方互換
+function calcPoints(a,b,th,correct){ return calcEXP(a,b,th,correct); }
+function updateTheta(th,a,b,correct){
+  const p=1/(1+Math.exp(-1.7*a*(th-b)));
+  const info=1.7*1.7*a*a*p*(1-p);
+  const delta=correct?(1-p)/(info+0.1):-p/(info+0.1);
+  return Math.max(-3,Math.min(3,th+delta*0.8));
+}
+function calcTotalScore(th,acc,vol){
+  const ts=Math.round(600*(th+3)/6);
+  const as=Math.round(200*acc);
+  const vs=Math.round(200*Math.min(vol/50,1));
+  return{total:ts+as+vs,ts,as,vs};
+}
+function thetaToPercent(t){return Math.min(100,Math.max(0,((t+3)/6)*100))}
+function diffLabel(b){return b<=-0.5?'やさしい':b<=0.5?'ふつう':'むずかしい'}
+
+// ── ログイン ──
+async function login(){
+  // デモモードかどうかで入力値の取得先を変える
+  let sc, gr, cl, sn;
+  if(DEMO_PARAMS){
+    sc = DEMO_PARAMS.school;
+    gr = DEMO_PARAMS.grade;
+    cl = DEMO_PARAMS.class_num;
+    sn = parseInt(document.getElementById('student-num-demo').value);
+  } else {
+    sc=document.getElementById('school-code').value.trim().toUpperCase();
+    gr=parseInt(document.getElementById('grade').value);
+    cl=parseInt(document.getElementById('class-num').value);
+    sn=parseInt(document.getElementById('student-num').value);
+  }
+  const nk=document.getElementById('nickname').value.trim();
+  if(!sc||!gr||!cl||!sn||!nk){showError('すべての項目を入力してください');return}
+  showLoading(true);
+  try{
+    const res=await api(`/rest/v1/student_profiles?school_code=eq.${sc}&grade=eq.${gr}&class_num=eq.${cl}&student_num=eq.${sn}&select=*`);
+    const data=await res.json();
+    if(data.length>0){
+      currentUser=data[0];
+      if(currentUser.nickname!==nk){
+        await api(`/rest/v1/student_profiles?id=eq.${currentUser.id}`,{method:'PATCH',body:JSON.stringify({nickname:nk,last_active:new Date().toISOString()})});
+        currentUser.nickname=nk;
+      }
+    }else{
+      const ins=await api('/rest/v1/student_profiles',{method:'POST',body:JSON.stringify({school_code:sc,grade:gr,class_num:cl,student_num:sn,nickname:nk,theta:0.0})});
+      const nd=await ins.json();
+      currentUser=Array.isArray(nd)?nd[0]:nd;
+    }
+    theta=currentUser.theta||0;
+    localStorage.setItem('upoc_uid',currentUser.id);
+    showLoading(false);
+    goHome();
+  }catch(e){showError('ログイン失敗: '+e.message);showLoading(false)}
+}
+function logout(){currentUser=null;localStorage.removeItem('upoc_uid');document.getElementById('user-row').style.display='none';showScreen('screen-login')}
+
+// ── ホーム ──
+async function goHome(){
+  document.getElementById('user-row').style.display='flex';
+  document.getElementById('user-name-disp').textContent=currentUser.nickname+' さん';
+  document.getElementById('user-avatar').textContent=currentUser.nickname[0];
+  renderLevelBanner();
+  renderModeCards();
+  await loadEvent();
+  await loadCatStats();
+  renderRecommend();
+  showScreen('screen-home');
+}
+
+// ── レベルバナー描画 ──
+function renderLevelBanner(){
+  const exp=currentUser.total_exp||0;
+  const lv=getLevelInfo(exp);
+  const nextLv=LEVELS.find(l=>l.lv===lv.lv+1);
+  document.getElementById('lv-badge').textContent='Lv.'+lv.lv;
+  document.getElementById('lv-name').textContent=lv.name;
+  document.getElementById('lv-exp-disp').textContent=exp.toLocaleString();
+  if(nextLv){
+    const cur=exp-lv.expNeeded;
+    const need=nextLv.expNeeded-lv.expNeeded;
+    const pct=Math.min(100,Math.round(cur/need*100));
+    document.getElementById('lv-exp-cur').textContent=cur;
+    document.getElementById('lv-exp-max').textContent=need;
+    document.getElementById('lv-exp-fill').style.width=pct+'%';
+    document.getElementById('lv-next').textContent='次のレベルまで '+(need-cur)+' EXP';
+  }else{
+    document.getElementById('lv-exp-fill').style.width='100%';
+    document.getElementById('lv-next').textContent='🎉 最高レベル到達！';
+  }
+}
+
+// ── モードカード描画 ──
+function renderModeCards(){
+  const exp=currentUser.total_exp||0;
+  const lv=getLevelInfo(exp).lv;
+  const modes=['normal','review','long','endless'];
+  const lvReqs={normal:1,review:2,long:3,endless:4};
+  const unlockTexts={normal:'Lv.1〜',review:'Lv.2〜解放 🔓',long:'Lv.3〜解放 🔓',endless:'Lv.4〜解放 🔓'};
+  modes.forEach(m=>{
+    const card=document.getElementById('mode-'+m);
+    const badge=document.getElementById(m+'-badge')||card.querySelector('.mode-badge');
+    const unlocked=lv>=lvReqs[m];
+    card.classList.toggle('locked',!unlocked);
+    if(badge){badge.textContent=unlocked?['Lv.1〜','EXP 1.3倍 🔁','15問・EXP 1.2倍','無制限・EXP 1.1倍'][modes.indexOf(m)]:unlockTexts[m];}
+    if(!unlocked&&!card.querySelector('.lock-icon')){
+      const lk=document.createElement('div');lk.className='lock-icon';lk.textContent='🔒';card.appendChild(lk);
+    }
+  });
+  // デフォルト選択
+  selectMode(currentMode,false);
+}
+
+let catStats={};
+async function loadCatStats(){
+  if(!currentUser)return;
+  try{
+    // 過去の回答からカテゴリ別正答率を取得
+    const res=await api('/rest/v1/event_responses?student_id=eq.'+currentUser.id+'&select=category,is_correct');
+    const data=await res.json();
+    catStats={};
+    if(Array.isArray(data)){
+      data.forEach(r=>{
+        if(!catStats[r.category])catStats[r.category]={correct:0,total:0};
+        catStats[r.category].total++;
+        if(r.is_correct)catStats[r.category].correct++;
+      });
+    }
+    // 不正解問題IDを取得
+    const res2=await api('/rest/v1/event_responses?student_id=eq.'+currentUser.id+'&is_correct=eq.false&select=question_id&limit=100');
+    const d2=await res2.json();
+    wrongQuestionIds=[...new Set((d2||[]).map(r=>r.question_id))];
+    document.getElementById('review-count-badge').textContent=wrongQuestionIds.length+'問';
+    document.getElementById('review-sub').textContent=wrongQuestionIds.length>0?`${wrongQuestionIds.length}問たまっています`:'まだまちがえた問題はありません';
+  }catch(e){console.error(e)}
+}
+
+function renderRecommend(){
+  const area=document.getElementById('recommend-area');
+  // 正答率が最も低いカテゴリを探す
+  let worstCat=null,worstPct=101;
+  for(const [cat,st] of Object.entries(catStats)){
+    if(st.total>=3){
+      const pct=st.correct/st.total*100;
+      if(pct<worstPct){worstPct=pct;worstCat=cat;}
+    }
+  }
+  if(!worstCat){area.style.display='none';return;}
+  area.style.display='block';
+  document.getElementById('recommend-cat-name').textContent=worstCat;
+  document.getElementById('recommend-sub').textContent=`あなたの正答率 ${Math.round(worstPct)}%　重点的に練習しよう！`;
+  area._recommendCat=worstCat;
+}
+
+function selectRecommend(){
+  const area=document.getElementById('recommend-area');
+  const cat=area._recommendCat;
+  if(!cat)return;
+  selectedCat=cat;
+  isRecommendCat=true;
+  // カテゴリカードを選択状態に
+  document.querySelectorAll('.home-cat-card').forEach(c=>{
+    c.classList.toggle('sel',c.dataset.cat===cat);
+  });
+  // おすすめカードを強調
+  document.getElementById('recommend-card').style.border='2px solid #e09b1f';
+}
+
+function renderHomeCats(cats){
+  const grid=document.getElementById('home-cats-grid');
+  grid.innerHTML='';
+  cats.forEach(c=>{
+    const st=catStats[c.name]||{correct:0,total:0};
+    const pct=st.total>0?Math.round(st.correct/st.total*100):-1;
+    const pctClass=pct<0?'mid':pct>=70?'good':pct>=50?'mid':'bad';
+    const pctText=pct<0?'未挑戦':pct+'%';
+    const fillW=pct<0?0:pct;
+    const card=document.createElement('div');
+    card.className='home-cat-card'+(selectedCat===c.name?' sel':'');
+    card.dataset.cat=c.name;
+    card.innerHTML=`<div class="hcc-top"><div class="hcc-name">${c.name}</div><div class="hcc-pct ${pctClass}">${pctText}</div></div><div class="hcc-bar"><div class="hcc-fill" style="width:${fillW}%;background:${c.color}"></div></div>`;
+    card.onclick=()=>{
+      selectedCat=selectedCat===c.name?'all':c.name;
+      isRecommendCat=false;
+      document.getElementById('recommend-card').style.border='';
+      document.querySelectorAll('.home-cat-card').forEach(el=>el.classList.remove('sel'));
+      if(selectedCat!=='all')card.classList.add('sel');
+    };
+    grid.appendChild(card);
+  });
+}
+
+function selectMode(mode,render=true){
+  const exp=currentUser?.total_exp||0;
+  const lv=getLevelInfo(exp).lv;
+  const lvReqs={normal:1,review:2,long:3,endless:4};
+  if(lv<lvReqs[mode])return; // ロック中は無視
+  currentMode=mode;
+  expMultiplier=MODE_CONFIG[mode].expMult;
+  document.querySelectorAll('.mode-card').forEach(c=>c.style.outline='');
+  const sel=document.getElementById('mode-'+mode);
+  if(sel)sel.style.outline='2px solid var(--accent2)';
+  // 復習モード
+  const reviewInfo=document.getElementById('review-info');
+  const catArea=document.getElementById('cat-select-area');
+  const recArea=document.getElementById('recommend-area');
+  if(mode==='review'){
+    reviewInfo.style.display='block';
+    catArea.style.display='none';
+    recArea.style.display='none';
+  }else{
+    reviewInfo.style.display='none';
+    if(render){
+      catArea.style.display='block';
+      renderHomeCats(CATS);
+      renderRecommend();
+    }
+  }
+  // ボタンテキスト
+  const btn=document.getElementById('btn-start-drill');
+  const labels={normal:'▶ ドリルをはじめる',review:'🔁 復習をはじめる',long:'🏃 長距離ドリルをはじめる',endless:'♾️ エンドレスをはじめる'};
+  if(btn)btn.textContent=labels[mode]||'▶ はじめる';
+}
+
+function renderCats(){
+  const grid=document.getElementById('cats-grid');
+  grid.innerHTML=CATS.map(c=>`
+    <div class="cat-card${c.name===selectedCat?' sel':''}" onclick="selectCat(this,'${c.name}')">
+      <div class="cat-top"><div class="cat-name">${c.name}</div><div class="cat-cnt">${c.cnt}問</div></div>
+      <div class="cat-bar"><div class="cat-fill" style="width:${Math.round(Math.random()*50+30)}%;background:${c.color}"></div></div>
+    </div>`).join('');
+}
+function selectCat(el,name){
+  selectedCat=name;
+  document.querySelectorAll('.cat-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function selectLevel(el){
+  if(el.classList.contains('disabled'))return;
+  selectedLevel=el.dataset.lv;
+  document.querySelectorAll('.lv').forEach(l=>l.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+async function loadEvent(){
+  try{
+    const today=new Date().toISOString().split('T')[0];
+    const sc=currentUser.school_code;
+    const res=await api(`/rest/v1/events?school_code=eq.${sc}&start_date=lte.${today}&end_date=gte.${today}&select=*&limit=1`);
+    const data=await res.json();
+    const area=document.getElementById('event-area');
+    if(!data||data.length===0){
+      area.innerHTML='<div class="no-event">現在開催中のイベントはありません</div>';
+      document.getElementById('score-banner').style.display='none';
+      document.getElementById('ranking-area').style.display='none';
+      return;
+    }
+    currentEvent=data[0];
+    applyFixedLevel(currentEvent.fixed_level);
+    const start=new Date(currentEvent.start_date);
+    const end=new Date(currentEvent.end_date);
+    const now=new Date();
+    const total=Math.round((end-start)/(1000*60*60*24))+1;
+    const passed=Math.min(total,Math.round((now-start)/(1000*60*60*24))+1);
+    const remaining=Math.max(0,Math.round((end-now)/(1000*60*60*24)));
+    const eventPct=Math.round(passed/total*100);
+    area.innerHTML=`
+      <div class="event-banner">
+        <div class="event-head">
+          <div><div class="event-name">${currentEvent.name}</div>
+          <div class="event-date">${currentEvent.start_date} 〜 ${currentEvent.end_date}</div></div>
+          <div class="pill pill-amber">残り${remaining}日</div>
+        </div>
+        <div class="prog-row">
+          <div class="prog-label"><b>イベント進捗</b><span>${passed} / ${total}日経過</span></div>
+          <div class="prog-bar"><div class="prog-fill" style="width:${eventPct}%;background:var(--accent2)"></div></div>
+        </div>
+        <div class="prog-row" id="prog-achievement">
+          <div class="prog-label"><b>自分の達成率</b><span id="ach-pct">-</span></div>
+          <div class="prog-bar"><div class="prog-fill" id="ach-fill" style="width:0%;background:var(--correct)"></div></div>
+        </div>
+        <div class="prog-row" style="margin-bottom:0">
+          <div class="prog-label"><b>クラス平均</b><span id="avg-pct">-</span></div>
+          <div class="prog-bar"><div class="prog-fill" id="avg-fill" style="width:0%;background:var(--muted)"></div></div>
+        </div>
+      </div>`;
+    await loadEventScore();
+    await loadRanking('総合');
+  }catch(e){console.error(e)}
+}
+
+function applyFixedLevel(level){
+  const lvArea=document.getElementById('lv-area');
+  const lvBtns=document.getElementById('lv-row').querySelectorAll('.lv');
+  if(!level||level==='all'){
+    selectedLevel='all';
+    lvArea.style.display='none';
+    return;
+  }
+  // fixed_levelがある場合のみレベルUIを表示
+  lvArea.style.display='block';
+  lvBtns.forEach(b=>{
+    b.classList.remove('sel','disabled');
+    if(b.dataset.lv===level){b.classList.add('sel');selectedLevel=level;}
+    else b.classList.add('disabled');
+  });
+}
+
+async function loadEventScore(){
+  if(!currentEvent||!currentUser)return;
+  try{
+    const res=await api(`/rest/v1/event_scores?event_id=eq.${currentEvent.id}&student_id=eq.${currentUser.id}&select=*`);
+    const data=await res.json();
+    eventScore=data.length>0?data[0]:null;
+    const sc=document.getElementById('score-banner');
+    if(!eventScore||eventScore.total_count===0){sc.style.display='none';return}
+    sc.style.display='flex';
+    const s=eventScore;
+    document.getElementById('score-num').innerHTML=s.total_score+'<span class="score-max"> / 1000</span>';
+    document.getElementById('sb-theta').style.width=(s.theta_score/600*100)+'%';
+    document.getElementById('sbv-theta').textContent=s.theta_score;
+    document.getElementById('sb-acc').style.width=(s.accuracy_score/200*100)+'%';
+    document.getElementById('sbv-acc').textContent=s.accuracy_score;
+    document.getElementById('sb-vol').style.width=(s.volume_score/200*100)+'%';
+    document.getElementById('sbv-vol').textContent=s.volume_score;
+    const achPct=Math.round(s.correct_count/Math.max(s.total_count,1)*100);
+    document.getElementById('ach-pct').textContent=achPct+'%';
+    document.getElementById('ach-fill').style.width=achPct+'%';
+    await loadClassAvg();
+  }catch(e){console.error(e)}
+}
+
+async function loadClassAvg(){
+  if(!currentEvent)return;
+  try{
+    const res=await api(`/rest/v1/event_scores?event_id=eq.${currentEvent.id}&school_code=eq.${currentUser.school_code}&select=correct_count,total_count`);
+    const data=await res.json();
+    if(!data||data.length===0)return;
+    const avgAch=Math.round(data.reduce((a,b)=>a+(b.correct_count/Math.max(b.total_count,1)),0)/data.length*100);
+    document.getElementById('avg-pct').textContent=avgAch+'%';
+    document.getElementById('avg-fill').style.width=avgAch+'%';
+  }catch(e){}
+}
+
+async function loadRanking(catFilter){
+  if(!currentEvent)return;
+  const rankArea=document.getElementById('ranking-area');
+  rankArea.style.display='block';
+  const sc=currentUser.school_code;
+  const gr=currentUser.grade;
+  const cl=currentUser.class_num;
+  document.getElementById('class-label').textContent=`${gr}年${cl}組`;
+  const tabs=['総合',...CATS.slice(0,5).map(c=>c.name)];
+  document.getElementById('rank-tabs').innerHTML=tabs.map(t=>
+    `<div class="cat-tab${t===catFilter?' on':''}" onclick="loadRanking('${t}')">${t==='総合'?'総合':t.replace('の種類','').replace('・法律','').replace('禁止','')}</div>`
+  ).join('');
+  try{
+    let rankData;
+    if(catFilter==='総合'){
+      const res=await api(`/rest/v1/event_scores?event_id=eq.${currentEvent.id}&school_code=eq.${sc}&select=student_id,total_score&order=total_score.desc&limit=10`);
+      rankData=await res.json();
+    }else{
+      const res=await api(`/rest/v1/event_responses?event_id=eq.${currentEvent.id}&category=eq.${encodeURIComponent(catFilter)}&select=student_id,is_correct,points_earned`);
+      const raw=await res.json();
+      const byStudent={};
+      raw.forEach(r=>{
+        if(!byStudent[r.student_id])byStudent[r.student_id]={student_id:r.student_id,total_score:0};
+        byStudent[r.student_id].total_score+=r.points_earned||0;
+      });
+      rankData=Object.values(byStudent).sort((a,b)=>b.total_score-a.total_score).slice(0,10);
+    }
+    if(!rankData||rankData.length===0){
+      document.getElementById('rank-list').innerHTML='<div style="font-size:13px;color:var(--muted);padding:12px 0">まだデータがありません</div>';
+      return;
+    }
+    const ids=rankData.map(r=>r.student_id);
+    const profRes=await api(`/rest/v1/student_profiles?id=in.(${ids.join(',')})&select=id,nickname`);
+    const profs=await profRes.json();
+    const profMap={};profs.forEach(p=>profMap[p.id]=p.nickname);
+    const maxScore=rankData[0].total_score||1;
+    const medalColors=['#c9a227','#9e9e9e','#a0522d'];
+    document.getElementById('rank-list').innerHTML=rankData.map((r,i)=>{
+      const nk=profMap[r.student_id]||'?';
+      const isMe=r.student_id===currentUser.id;
+      const pct=Math.round(r.total_score/maxScore*100);
+      return`<div class="rank-item">
+        <div class="rank-n" style="${i<3?'color:'+medalColors[i]:''}">${i+1}</div>
+        <div class="rank-av" style="${isMe?'background:var(--accent-light);color:var(--accent2)':''}">${nk[0]}</div>
+        <div class="rank-name${isMe?' rank-me':''}">${nk}${isMe?' （自分）':''}</div>
+        <div class="rank-bar-w"><div class="rank-bar"><div style="height:100%;width:${pct}%;background:${isMe?'var(--accent2)':i<3?medalColors[i]:'var(--muted)'};border-radius:2px"></div></div></div>
+        <div class="rank-sc" style="${isMe?'color:var(--accent2)':''}">${r.total_score}</div>
+      </div>`;
+    }).join('');
+    const myRank=rankData.findIndex(r=>r.student_id===currentUser.id)+1;
+    if(myRank>0)document.getElementById('score-rank').textContent=`クラス ${myRank}位 / ${rankData.length}人中`;
+  }catch(e){console.error(e)}
+}
+
+// ── ドリル ──
+async function startDrill(){
+  showLoading(true);
+  try{
+    const cfg=MODE_CONFIG[currentMode];
+    let data;
+    if(currentMode==='review'){
+      // 復習モード：不正解問題を優先
+      if(wrongQuestionIds.length===0){showError('まちがえた問題がありません。通常ドリルで練習しよう！');showLoading(false);return;}
+      const ids=wrongQuestionIds.slice(0,20).join(',');
+      const res=await api(`/rest/v1/questions?id=in.(${ids})&status=eq.${QSTATUS}&select=id,question_text,choices,correct_index,explanation,law_ref,irt_a,irt_b,category,photo_url,location_tag,tags`);
+      data=await res.json();
+    }else{
+      const url=`/rest/v1/questions?status=eq.${QSTATUS}&limit=200&select=id,question_text,choices,correct_index,explanation,law_ref,irt_a,irt_b,category,photo_url,location_tag,tags`;
+      const res=await api(url);
+      data=await res.json();
+      if(selectedLevel!=='all'){
+        data=data.filter(q=>selectedLevel==='easy'?q.irt_b<=-0.5:selectedLevel==='mid'?q.irt_b>-0.5&&q.irt_b<=0.5:q.irt_b>0.5);
+      }
+    }
+    if(data.length===0){showError('条件に合う問題が見つかりませんでした');showLoading(false);return;}
+
+    // カテゴリフィルター（全問のうち選択カテゴリ約70%・他30%）
+    if(selectedCat!=='all'&&currentMode!=='review'){
+      const catQs=data.filter(q=>q.category===selectedCat);
+      const otherQs=data.filter(q=>q.category!==selectedCat);
+      catQs.sort(()=>Math.random()-0.5);
+      otherQs.sort(()=>Math.random()-0.5);
+      // 選択カテゴリ70%、他30%の比率でプールを構成
+      const catN=Math.ceil(cfg.maxQ*0.7);
+      const othN=cfg.maxQ-catN;
+      questionPool=[...catQs,...otherQs.slice(0,othN*3)];
+    }else{
+      data.sort(()=>Math.random()-0.5);
+      questionPool=data;
+    }
+
+    questions=[];
+    currentIdx=0;correctCount=0;totalAnswered=0;sessionPoints=0;streakCount=0;
+    se=1.0;
+    pickNextQuestion();
+    showLoading(false);
+    showScreen('screen-drill');
+    renderQuestion();
+  }catch(e){showError('問題の取得に失敗しました: '+e.message);showLoading(false)}
+}
+
+// Fisher情報量が最大の問題を選ぶ
+function pickNextQuestion(){
+  const answered_ids=new Set(questions.map(q=>q.id));
+  const remaining=questionPool.filter(q=>!answered_ids.has(q.id));
+  if(remaining.length===0)return null;
+  // Fisher情報量 = 1.7² × a² × P(1-P)
+  let best=null,bestInfo=-1;
+  for(const q of remaining){
+    const p=1/(1+Math.exp(-1.7*q.irt_a*(theta-q.irt_b)));
+    const info=1.7*1.7*q.irt_a*q.irt_a*p*(1-p);
+    // ランダム性を少し加えて同じ問題ばかり出ないように
+    const score=info*(0.8+Math.random()*0.4);
+    if(score>bestInfo){bestInfo=score;best=q;}
+  }
+  if(best)questions.push(best);
+  return best;
+}
+
+// SEを計算（回答済み問題のFisher情報量の合計の平方根の逆数）
+function calcSE(){
+  let totalInfo=0;
+  for(const q of questions.slice(0,totalAnswered)){
+    const p=1/(1+Math.exp(-1.7*q.irt_a*(theta-q.irt_b)));
+    totalInfo+=1.7*1.7*q.irt_a*q.irt_a*p*(1-p);
+  }
+  return totalInfo>0?1/Math.sqrt(totalInfo):1.0;
+}
+
+// ドリル終了判定
+function shouldFinish(){
+  const cfg=MODE_CONFIG[currentMode];
+  if(totalAnswered<cfg.minQ)return false;
+  if(currentMode==='endless')return false; // エンドレスは手動終了のみ
+  if(totalAnswered>=cfg.maxQ)return true;
+  se=calcSE();
+  return se<=SE_THRESHOLD;
+}
+
+function renderQuestion(){
+  const q=questions[currentIdx];
+  answered=false;
+  const cfg=MODE_CONFIG[currentMode];
+  // 自転車プログレス
+  let progress;
+  if(currentMode==='endless'){
+    // エンドレスは問題数でゲージが伸び続ける（50問で満タンイメージ）
+    progress=Math.min(100,Math.round(totalAnswered/50*100));
+  }else{
+    progress=Math.min(100,Math.round(totalAnswered/cfg.maxQ*100));
+  }
+  const trackW=document.querySelector('.bike-track')?.offsetWidth||300;
+  const bikeEl=document.getElementById('bike-svg');
+  const fillEl=document.getElementById('bike-fill');
+  if(bikeEl&&fillEl){
+    fillEl.style.width=progress+'%';
+    const bikeLeft=Math.max(0,Math.min(trackW-42,Math.round((progress/100)*(trackW-42))));
+    bikeEl.style.left=bikeLeft+'px';
+    animatePedal(bikeEl);
+  }
+  // ラベル
+  const progLabels={normal:`${totalAnswered+1} / ${cfg.maxQ}問`,review:`復習 ${totalAnswered+1}問目`,long:`${totalAnswered+1} / ${cfg.maxQ}問`,endless:`${totalAnswered+1}問目（エンドレス）`};
+  document.getElementById('progress-text').textContent=progLabels[currentMode]||`${totalAnswered+1}問目`;
+  const modeLabel=currentMode==='endless'?'やめるときは結果ボタンを押してね':
+    (totalAnswered>=cfg.minQ&&se<=SE_THRESHOLD+0.15?'もうすぐ完了！':'理解度を測定中...');
+  document.getElementById('progress-pct').textContent=modeLabel;
+  // ストリーク表示
+  const streakEl=document.getElementById('bike-streak');
+  if(streakEl) streakEl.textContent=streakCount>=3?`🔥 ${streakCount}問連続正解中！`:'';
+  document.getElementById('q-num').textContent=`Q${currentIdx+1}`;
+  document.getElementById('cat-badge').textContent=q.category;
+  document.getElementById('diff-badge').textContent=diffLabel(q.irt_b);
+
+  // 注釈分離
+  let qText=q.question_text;
+  const noteEl=document.getElementById('q-note');
+  const nm=qText.match(/※[^\n]+/);
+  if(nm){noteEl.textContent=nm[0];noteEl.style.display='block';qText=qText.replace(nm[0],'').trim();}
+  else noteEl.style.display='none';
+  document.getElementById('q-text').textContent=qText;
+
+  // 写真（ローカル問題）優先
+  const photoWrap=document.getElementById('q-photo-wrap');
+  const illustWrap=document.getElementById('q-illust');
+  if(q.photo_url){
+    document.getElementById('q-photo').src=q.photo_url;
+    const loc=document.getElementById('q-location');
+    loc.innerHTML=q.location_tag?`📍 ${q.location_tag}`:'';
+    loc.style.display=q.location_tag?'block':'none';
+    photoWrap.style.display='block';
+    illustWrap.style.display='none';
+  }else{
+    photoWrap.style.display='none';
+    // イラスト自動マッピング
+    const illustPath=getIllust(q);
+    if(illustPath){
+      const img=document.getElementById('q-illust-img');
+      img.src=illustPath;
+      img.onerror=()=>{ illustWrap.style.display='none'; };
+      img.onload=()=>{ illustWrap.style.display='flex'; };
+      illustWrap.style.display='flex';
+    }else{
+      illustWrap.style.display='none';
+    }
+  }
+
+  // 選択肢
+  const choices=typeof q.choices==='string'?JSON.parse(q.choices):q.choices;
+  const labels=['ア','イ','ウ','エ'];
+  const container=document.getElementById('choices');
+  container.innerHTML='';
+  choices.forEach((c,i)=>{
+    const btn=document.createElement('button');
+    btn.className='choice-btn';
+    btn.innerHTML=`<span class="choice-lbl">${labels[i]}</span><span>${c}</span>`;
+    btn.onclick=()=>selectAnswer(i,q);
+    container.appendChild(btn);
+  });
+
+  document.getElementById('feedback').style.display='none';
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('btn-next').style.display='none';
+  document.getElementById('pts-badge').style.display='none';
+}
+
+function selectAnswer(idx,q){
+  if(answered)return;
+  answered=true;
+  const correct=idx===q.correct_index;
+  document.querySelectorAll('.choice-btn').forEach((btn,i)=>{
+    btn.disabled=true;
+    if(i===q.correct_index)btn.classList.add('correct');
+    else if(i===idx&&!correct)btn.classList.add('wrong');
+  });
+  const pts=calcPoints(q.irt_a,q.irt_b,theta,correct);
+  sessionPoints+=pts;
+  theta=updateTheta(theta,q.irt_a,q.irt_b,correct);
+  if(correct)correctCount++;
+  totalAnswered++;
+  const fb=document.getElementById('feedback');
+  fb.style.display='block';
+  fb.className='feedback '+(correct?'correct':'wrong');
+  document.getElementById('fb-title').textContent=correct?'正解！':`不正解　正解は「${['ア','イ','ウ','エ'][q.correct_index]}」`;
+  document.getElementById('fb-body').textContent=q.explanation;
+  document.getElementById('fb-law').textContent=q.law_ref?'📌 '+q.law_ref:'';
+  // ストリーク更新
+  if(correct){streakCount++;if(streakCount>0&&streakCount%3===0)sessionPoints+=50;}
+  else streakCount=0;
+  const isBonus=isRecommendCat||(currentMode==='review');
+  const pb=document.getElementById('pts-badge');
+  pb.textContent=isBonus?`+${pts} EXP ⚡ボーナス中！`:`+${pts} EXP`;
+  pb.className='pts-badge'+(isBonus?' bonus':'');
+  pb.style.display='inline-block';
+  if(currentEvent&&currentUser){
+    api('/rest/v1/event_responses',{method:'POST',body:JSON.stringify({
+      event_id:currentEvent.id,student_id:currentUser.id,
+      question_id:q.id,category:q.category,
+      is_correct:correct,irt_a:q.irt_a,irt_b:q.irt_b,
+      theta_at_answer:parseFloat(theta.toFixed(3)),points_earned:pts
+    })}).catch(e=>console.error(e));
+  }
+  // SE再計算して終了判定
+  se=calcSE();
+  const bn=document.getElementById('btn-next');
+  bn.style.display='block';
+  bn.textContent=shouldFinish()?'結果を見る':'次の問題 →';
+  // エンドレスモードは「やめる」ボタンも表示
+  const stopBtn=document.getElementById('btn-stop-endless');
+  if(stopBtn)stopBtn.style.display=currentMode==='endless'?'block':'none';
+}
+
+async function nextQuestion(){
+  if(shouldFinish()){
+    await saveSession();
+    showResult();
+    return;
+  }
+  const next=pickNextQuestion();
+  if(!next){
+    // プールが尽きた場合も終了
+    await saveSession();
+    showResult();
+    return;
+  }
+  currentIdx++;
+  renderQuestion();
+}
+// エンドレスモードの手動終了
+async function stopEndless(){
+  await saveSession();
+  showResult();
+}
+
+async function saveSession(){
+  if(currentUser){
+    const oldExp=currentUser.total_exp||0;
+    const newExp=oldExp+sessionPoints;
+    const oldLv=getLevelInfo(oldExp).lv;
+    const newLv=getLevelInfo(newExp).lv;
+    await api(`/rest/v1/student_profiles?id=eq.${currentUser.id}`,{
+      method:'PATCH',
+      body:JSON.stringify({theta:parseFloat(theta.toFixed(3)),total_exp:newExp,level:newLv,last_active:new Date().toISOString()})
+    }).catch(e=>console.error(e));
+    currentUser.theta=theta;
+    currentUser.total_exp=newExp;
+    currentUser.level=newLv;
+    // レベルアップ判定
+    if(newLv>oldLv){
+      const lvInfo=LEVELS.find(l=>l.lv===newLv);
+      showLevelUp(newLv,lvInfo);
+    }
+  }
+  if(currentEvent&&currentUser){
+    const acc=correctCount/totalAnswered;
+    const prevTotal=(eventScore?.total_count||0);
+    const prevCorrect=(eventScore?.correct_count||0);
+    const newTotal=prevTotal+totalAnswered;
+    const newCorrect=prevCorrect+correctCount;
+    const newAcc=newCorrect/newTotal;
+    const sc=calcTotalScore(theta,newAcc,newTotal);
+    const payload={
+      event_id:currentEvent.id,student_id:currentUser.id,
+      school_code:currentUser.school_code,
+      total_score:sc.total,correct_count:newCorrect,total_count:newTotal,
+      theta_score:sc.ts,accuracy_score:sc.as,volume_score:sc.vs,
+      updated_at:new Date().toISOString()
+    };
+    await api('/rest/v1/event_scores?on_conflict=event_id,student_id',{
+      method:'POST',
+      headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},
+      body:JSON.stringify(payload)
+    }).catch(e=>console.error(e));
+    eventScore=payload;
+  }
+}
+
+function showResult(){
+  const pct=Math.round(correctCount/Math.max(totalAnswered,1)*100);
+  document.getElementById('res-correct').textContent=`${correctCount}/${totalAnswered}`;
+  document.getElementById('res-pct').textContent=pct+'%';
+  document.getElementById('res-theta').textContent=theta.toFixed(2);
+  document.getElementById('result-score').textContent='+'+sessionPoints+' EXP';
+  const comment=pct>=80?'すばらしい！🎉':pct>=60?'まずまずです👍':'もう少し練習しよう💪';
+  const modeNames={normal:'通常ドリル',review:'復習モード',long:'長距離ドリル',endless:'エンドレス'};
+  document.getElementById('result-title').textContent=(modeNames[currentMode]||'ドリル')+'完了！';
+  document.getElementById('result-sub').textContent=`${totalAnswered}問回答・正答率 ${pct}%　${comment}`;
+  // EXP内訳
+  const baseExp=Math.round(sessionPoints/(expMultiplier*(isRecommendCat?1.5:1.0)));
+  let detail=`基本EXP: ${baseExp}`;
+  if(expMultiplier!==1.0)detail+=` × ${expMultiplier}（モードボーナス）`;
+  if(isRecommendCat)detail+=' × 1.5（おすすめカテゴリ）';
+  if(streakCount>=3)detail+=` + 連続正解ボーナス`;
+  document.getElementById('result-exp-detail').textContent=detail;
+  showScreen('screen-result');
+}
+
+// ── レベルアップ演出 ──
+function showLevelUp(lv,lvInfo){
+  const overlay=document.getElementById('levelup-overlay');
+  document.getElementById('lu-lv').textContent=lv;
+  document.getElementById('lu-name').textContent=lvInfo?.name||'';
+  document.getElementById('lu-unlock').textContent='🔓 '+( lvInfo?.unlock||'新機能が解放されました！');
+  overlay.classList.add('show');
+  spawnConfetti();
+}
+function closeLevelUp(){
+  document.getElementById('levelup-overlay').classList.remove('show');
+}
+function spawnConfetti(){
+  const colors=['#3271d8','#2a9d63','#e09b1f','#d95a5a','#7F77DD','#c45e8a'];
+  for(let i=0;i<40;i++){
+    const el=document.createElement('div');
+    el.className='confetti-piece';
+    el.style.cssText=`left:${Math.random()*100}vw;top:-10px;background:${colors[i%colors.length]};animation-delay:${Math.random()*0.8}s;animation-duration:${1.2+Math.random()*0.8}s;transform:rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),2500);
+  }
+}
+
+// ── 自転車ペダルアニメーション ──
+let pedalAngle=0;
+function animatePedal(bikeEl){
+  const line=bikeEl.querySelector('#pedal-line');
+  if(!line)return;
+  if(bikeAnimFrame)cancelAnimationFrame(bikeAnimFrame);
+  let start=null;
+  function step(ts){
+    if(!start)start=ts;
+    const elapsed=(ts-start);
+    pedalAngle=(pedalAngle+4)%360;
+    const rad=pedalAngle*Math.PI/180;
+    const cx=18,cy=18,r=3;
+    const x2=Math.round((cx+r*Math.cos(rad))*10)/10;
+    const y2=Math.round((cy+r*Math.sin(rad))*10)/10;
+    line.setAttribute('x2',x2);
+    line.setAttribute('y2',y2);
+    if(elapsed<400)bikeAnimFrame=requestAnimationFrame(step);
+  }
+  bikeAnimFrame=requestAnimationFrame(step);
+}
+
+(async function init(){
+  const uid=localStorage.getItem('upoc_uid');
+  if(!uid)return;
+  try{
+    const res=await api(`/rest/v1/student_profiles?id=eq.${uid}&select=*`);
+    const data=await res.json();
+    if(data.length>0){currentUser=data[0];theta=currentUser.theta||0;goHome();}
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
