@@ -81,7 +81,7 @@ section{padding:96px 0}
 .laptop .screen .slot{position:absolute;inset:0}
 .laptop .screen{position:relative}
 .laptop::after{content:'';display:block;height:11px;margin:0 -4%;background:linear-gradient(#cfd2da,#a9adb8);border-radius:0 0 14px 14px}
-.phone{width:100%;aspect-ratio:9/18.5;border:7px solid #1b1d26;border-radius:28px;overflow:hidden;background:#fff;position:relative}
+.phone{width:100%;aspect-ratio:9/18.5;border:clamp(3px,.9vw,7px) solid #1b1d26;border-radius:11%/5.4%;overflow:hidden;background:#fff;position:relative}
 .phone .slot{position:absolute;inset:0}
 .phone .wire{padding:8px}
 .phone .wire .bx{font-size:9px;padding:4px}
