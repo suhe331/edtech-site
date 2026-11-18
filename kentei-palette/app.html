@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>検定パレット｜つくって、挑戦する</title>
+<style>
+:root{--o:#ff6a3a;--od:#e4521f;--os:#fff0e8;--n:#16213a;--t:#1d2433;--m:#6b7280;--b:#e6e8ef;--bg:#f6f7fb;--g:#2a9d63;--gs:#effaf4;--w:#d95a5a;--ws:#fff0f0;--r:14px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','BIZ UDPGothic','Noto Sans JP',sans-serif;background:var(--bg);color:var(--t);min-height:100vh}
+button,input,textarea{font-family:inherit}
+.hd{background:#fff;border-bottom:1px solid var(--b);height:56px;padding:0 20px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:10}
+.logo{font-weight:900;font-size:20px;text-decoration:none;color:var(--t)}.logo em{color:var(--o);font-style:normal}
+.hd .sp{flex:1}
+.lvbox{font-size:13px;color:var(--m);display:flex;align-items:center;gap:8px}
+.lvbox b{color:var(--od)}
+.xpbar{width:90px;height:6px;background:var(--b);border-radius:3px;overflow:hidden}.xpbar i{display:block;height:100%;background:var(--o);width:0}
+.back{font-size:13px;color:var(--m);text-decoration:none}
+.wrap{max-width:1100px;margin:0 auto;padding:20px 16px 80px}
+.tabs{display:flex;gap:8px;margin-bottom:18px;overflow-x:auto}
+.tab{border:none;background:#fff;border:1px solid var(--b);color:var(--m);font-weight:700;font-size:14px;padding:10px 18px;border-radius:99px;cursor:pointer;white-space:nowrap}
+.tab.on{background:var(--o);border-color:var(--o);color:#fff}
+.pane{display:none}.pane.on{display:block}
+.card{background:#fff;border:1px solid var(--b);border-radius:var(--r);padding:20px}
+.h{font-size:20px;font-weight:900;margin-bottom:6px}
+.sub{font-size:13px;color:var(--m);line-height:1.7;margin-bottom:14px}
+.lbl{font-size:12px;font-weight:700;color:var(--m);margin:14px 0 6px;display:block}
+.btn{border:none;background:var(--o);color:#fff;font-weight:800;font-size:15px;padding:13px 24px;border-radius:99px;cursor:pointer}
+.btn:hover{background:var(--od)}.btn:disabled{opacity:.45;cursor:default}
+.btn.ghost{background:#fff;color:var(--od);border:2px solid var(--o)}.btn.ghost:hover{background:var(--os)}
+.btn.sm{font-size:12px;padding:7px 14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+input[type=text],textarea{width:100%;border:2px solid var(--b);border-radius:10px;padding:11px 13px;font-size:15px;background:#fff;color:var(--t)}
+textarea{resize:vertical;min-height:84px;line-height:1.6}
+input:focus,textarea:focus{outline:none;border-color:var(--o)}
+.grid2{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:900px){.grid2{grid-template-columns:440px 1fr;gap:20px;align-items:start}}
+.drop{border:2px dashed var(--b);border-radius:var(--r);min-height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--m);font-size:14px;text-align:center;padding:16px;overflow:hidden;background:#fafbfe}
+.drop img{width:100%;max-height:340px;object-fit:cover;border-radius:10px;display:block}
+.chip{display:inline-block;font-size:12px;font-weight:800;padding:4px 12px;border-radius:99px}
+.chip.ai{background:#e9ecfb;color:#2b3fb8}.chip.me{background:var(--os);color:var(--od)}
+.note{background:#e9ecfb44;border:1px solid #d7dcf5;border-radius:12px;padding:14px;font-size:14px;line-height:1.7;margin-top:12px;display:none}
+.opt{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.opt input[type=radio]{accent-color:var(--g);width:20px;height:20px;flex-shrink:0}
+.opt .k{width:28px;height:28px;border-radius:50%;background:var(--bg);color:var(--m);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.msg{font-size:13px;padding:10px 14px;border-radius:10px;margin-top:12px;display:none;line-height:1.6}
+.msg.err{background:var(--ws);color:var(--w);display:block}.msg.ok{background:var(--gs);color:var(--g);display:block}
+.spin{display:none;font-size:13px;color:var(--m);margin-top:12px}
+/* quiz */
+.qimg{width:100%;max-height:300px;object-fit:cover;border-radius:12px;margin-bottom:14px}
+.qtext{font-size:19px;font-weight:800;line-height:1.6;margin-bottom:14px}
+.ch{display:block;width:100%;text-align:left;border:2px solid var(--b);background:#fff;border-radius:12px;padding:14px 16px;font-size:16px;font-weight:700;margin-bottom:10px;cursor:pointer}
+.ch:hover{border-color:var(--o)}
+.ch.ok{border-color:var(--g);background:var(--gs)}.ch.ng{border-color:var(--w);background:var(--ws)}
+.fb{display:none;margin-top:12px;padding:14px;border-radius:12px;background:var(--os);font-size:14px;line-height:1.8}
+.pick{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.mini{border:2px solid var(--b);border-radius:12px;overflow:hidden;background:#fff;cursor:pointer;text-align:left}
+.mini:hover{border-color:var(--o)}
+.mini img{width:100%;height:110px;object-fit:cover;display:block}
+.mini div{padding:10px 12px;font-size:13px;font-weight:700;line-height:1.5}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.stat{background:#fff;border:1px solid var(--b);border-radius:12px;padding:14px 16px}
+.stat small{font-size:11px;color:var(--m);display:block;margin-bottom:4px}
+.stat b{font-size:28px;color:var(--od);line-height:1}
+.item{display:flex;gap:12px;align-items:center;border-top:1px solid var(--b);padding:12px 0}
+.item:first-child{border-top:none}
+.item img{width:64px;height:64px;object-fit:cover;border-radius:10px;flex-shrink:0}
+.item .tx{flex:1;font-size:14px;font-weight:700;line-height:1.5;min-width:0}
+.item .tx small{display:block;font-weight:500;color:var(--m);font-size:12px}
+.empty{font-size:14px;color:var(--m);padding:20px 0;text-align:center;line-height:1.8}
+.foot{font-size:12px;color:var(--m);text-align:center;margin-top:24px;line-height:1.8}
+</style>
+</head>
+<body>
+<header class="hd">
+  <a class="logo" href="./">検定<em>パレット</em></a>
+  <span class="sp"></span>
+  <div class="lvbox"><span>Lv.<b id="lv">1</b></span><div class="xpbar"><i id="xpf"></i></div><span id="xp">0 EXP</span></div>
+  <a class="back" href="./">← 紹介ページ</a>
+</header>
+
+<div class="wrap">
+  <div class="tabs" id="tabs">
+    <button class="tab on" data-p="make">① 写真とつくる</button>
+    <button class="tab" data-p="play">② 挑戦</button>
+    <button class="tab" data-p="look">③ ふりかえり</button>
+  </div>
+
+  <!-- つくる -->
+  <section class="pane on" id="p-make">
+    <div class="grid2">
+      <div class="card">
+        <div class="h">1. 写真をえらぶ</div>
+        <p class="sub">外で撮った写真を使います。気になったものを選ぼう。</p>
+        <label class="drop" id="drop" for="file">
+          <span style="font-size:34px">📷</span><span>タップして写真を撮る／えらぶ</span>
+        </label>
+        <input type="file" id="file" accept="image/*" style="display:none">
+        <label class="lbl" for="theme">見つけたこと・テーマ（自由に書く）</label>
+        <input type="text" id="theme" placeholder="例：田んぼで稲刈りをしていた">
+        <div class="row" style="margin-top:14px">
+          <button class="btn" id="btnAI" disabled>AIに下書きをお願いする</button>
+          <button class="btn ghost" id="btnSelf" disabled>自分で一からつくる</button>
+        </div>
+        <div class="spin" id="spin">AIが下書きをつくっています…</div>
+        <div class="msg" id="aiMsg"></div>
+        <div class="note" id="aiNote"></div>
+      </div>
+
+      <div class="card" id="editor" style="opacity:.5;pointer-events:none">
+        <div class="row" style="justify-content:space-between"><div class="h" style="margin:0">2. 問題を仕上げる</div><span class="chip me" id="editCnt">自分で直した：0か所</span></div>
+        <p class="sub" style="margin-top:6px">AIの案は下書きです。言葉を直して、自分の問題にしよう。</p>
+        <label class="lbl" for="q">問題文</label>
+        <textarea id="q" placeholder="例：イネの実の、いちばん外側のかたいからを何という？"></textarea>
+        <label class="lbl">選択肢（正しい答えにチェック）</label>
+        <div class="opt"><input type="radio" name="ans" value="0" checked><span class="k">A</span><input type="text" class="c" placeholder="選択肢A"></div>
+        <div class="opt"><input type="radio" name="ans" value="1"><span class="k">B</span><input type="text" class="c" placeholder="選択肢B"></div>
+        <div class="opt"><input type="radio" name="ans" value="2"><span class="k">C</span><input type="text" class="c" placeholder="選択肢C"></div>
+        <label class="lbl" for="ex">解説</label>
+        <textarea id="ex" placeholder="なぜその答えになるのか、ひとことで書こう"></textarea>
+        <div class="msg" id="saveMsg"></div>
+        <div class="row" style="margin-top:16px"><button class="btn" id="btnSave">この問題を保存する</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 挑戦 -->
+  <section class="pane" id="p-play">
+    <div class="card" id="playBox"></div>
+  </section>
+
+  <!-- ふりかえり -->
+  <section class="pane" id="p-look">
+    <div class="stats">
+      <div class="stat"><small>つくった問題</small><b id="sMade">0</b></div>
+      <div class="stat"><small>自分で直した回数</small><b id="sEdit">0</b></div>
+      <div class="stat"><small>挑戦の正答率</small><b id="sAcc">–</b></div>
+    </div>
+    <div class="card"><div class="h">つくった問題</div><div id="list"></div></div>
+  </section>
+
+  <p class="foot">※ つくった問題は、この端末のブラウザに保存されます。<br>※ AIは下書きまで。仕上げるのは自分です。</p>
+</div>
+
+<script>
+(function(){
+var $=function(s){return document.querySelector(s)},$$=function(s){return [].slice.call(document.querySelectorAll(s))};
+var KEY='kp_state_v1';
+var S=load();
+function load(){try{var s=JSON.parse(localStorage.getItem(KEY));if(s&&s.qs)return s}catch(e){}return {qs:[],tries:0,right:0,exp:0}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){msg('saveMsg','err','保存できませんでした（容量がいっぱいかもしれません）。')}}
+function esc(s){var d=document.createElement('div');d.textContent=s==null?'':s;return d.innerHTML}
+function msg(id,type,t){var e=$('#'+id);e.className='msg '+type;e.textContent=t}
+
+/* タブ */
+$$('.tab').forEach(function(b){b.onclick=function(){go(b.dataset.p)}});
+function go(p){$$('.tab').forEach(function(x){x.classList.toggle('on',x.dataset.p===p)});$$('.pane').forEach(function(x){x.classList.toggle('on',x.id==='p-'+p)});if(p==='play')renderPlay();if(p==='look')renderLook();}
+
+/* レベル */
+function head(){var lv=Math.floor(S.exp/100)+1;$('#lv').textContent=lv;$('#xp').textContent=S.exp+' EXP';$('#xpf').style.width=(S.exp%100)+'%'}
+
+/* 写真 */
+var photoBig=null,photoSmall=null,draft=null;
+$('#file').onchange=function(e){
+  var f=e.target.files[0];if(!f)return;
+  var r=new FileReader();
+  r.onload=function(){var im=new Image();im.onload=function(){
+    photoBig=shrink(im,1024,.82);photoSmall=shrink(im,480,.7);
+    $('#drop').innerHTML='<img src="'+photoBig+'" alt="選んだ写真">';
+    $('#btnAI').disabled=false;$('#btnSelf').disabled=false;
+  };im.src=r.result};
+  r.readAsDataURL(f);
+};
+function shrink(im,max,q){var s=Math.min(1,max/Math.max(im.width,im.height));var c=document.createElement('canvas');c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext('2d').drawImage(im,0,0,c.width,c.height);return c.toDataURL('image/jpeg',q)}
+
+/* エディタ */
+function openEditor(d){
+  draft=d?JSON.parse(JSON.stringify(d)):null;
+  $('#q').value=d?d.question:'';
+  var cs=$$('.c');cs.forEach(function(c,i){c.value=d?d.choices[i]:''});
+  $$('input[name=ans]')[d?d.answer:0].checked=true;
+  $('#ex').value=d?d.explanation:'';
+  var ed=$('#editor');ed.style.opacity=1;ed.style.pointerEvents='auto';
+  countEdits();ed.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function cur(){var cs=$$('.c').map(function(c){return c.value.trim()});var a=0;$$('input[name=ans]').forEach(function(r,i){if(r.checked)a=i});
+  return {question:$('#q').value.trim(),choices:cs,answer:a,explanation:$('#ex').value.trim()}}
+function countEdits(){
+  var n=0,c=cur();
+  if(draft){if(c.question!==draft.question)n++;c.choices.forEach(function(x,i){if(x!==draft.choices[i])n++});if(c.answer!==draft.answer)n++;if(c.explanation!==draft.explanation)n++}
+  $('#editCnt').textContent='自分で直した：'+n+'か所';return n}
+$$('#editor textarea,#editor input').forEach(function(e){e.addEventListener('input',countEdits);e.addEventListener('change',countEdits)});
+$('#btnSelf').onclick=function(){$('#aiNote').style.display='none';openEditor(null)};
+
+/* AI下書き */
+$('#btnAI').onclick=function(){
+  if(!photoBig)return;
+  $('#spin').style.display='block';$('#aiMsg').className='msg';$('#btnAI').disabled=true;
+  var theme=$('#theme').value.trim();
+  var prompt='あなたは、小学生〜中学生が「自分でクイズ（検定）の問題をつくる」のを手伝うアシスタントです。\n写真を見て、子どもがつくる問題の「下書き」を1問、日本語でつくってください。\n'+(theme?'子どもが見つけたこと：'+theme+'\n':'')+'条件：\n- 写真に実際に写っているものから出題する。写真から分からないことは書かない。\n- 3択。やさしい言葉で、ひらがなを多めに。\n- 正解は1つ。誤りの選択肢はもっともらしく。\n- 解説は2文以内。\n- note は「写真に〇〇が写っています。『△△はどうでしょう。』」のように、子どもに着眼点を示す一言。\n次のJSONだけを出力してください（説明文やコードブロックは不要）：\n{"note":"","question":"","choices":["","",""],"answer":0,"explanation":""}\nanswer は正解の選択肢の番号（0,1,2）。';
+  fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+    model:'claude-sonnet-4-6',max_tokens:1000,
+    messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:'image/jpeg',data:photoBig.split(',')[1]}},{type:'text',text:prompt}]}]
+  })}).then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error((j.error&&j.error.message)||j.error||r.status);return j})})
+  .then(function(j){
+    var t=(j.content||[]).map(function(x){return x.text||''}).join('');
+    var m=t.match(/\{[\s\S]*\}/);if(!m)throw new Error('下書きを読み取れませんでした');
+    var d=JSON.parse(m[0]);
+    if(!d.question||!d.choices||d.choices.length<3)throw new Error('下書きの形が正しくありませんでした');
+    d.choices=d.choices.slice(0,3).map(String);d.answer=Math.max(0,Math.min(2,parseInt(d.answer,10)||0));d.explanation=d.explanation||'';
+    var n=$('#aiNote');n.style.display='block';n.innerHTML='<span class="chip ai">AIの下書き</span><div style="margin-top:8px">'+esc(d.note||'')+'</div><div style="font-size:12px;color:var(--m);margin-top:6px">※ 下書きです。直すのは、あなたです。</div>';
+    openEditor(d);
+  }).catch(function(e){
+    msg('aiMsg','err','AIの下書きを作れませんでした（'+e.message+'）。「自分で一からつくる」でも進められます。');
+  }).then(function(){$('#spin').style.display='none';$('#btnAI').disabled=false});
+};
+
+/* 保存 */
+$('#btnSave').onclick=function(){
+  var c=cur();
+  if(!c.question){return msg('saveMsg','err','問題文を書いてください。')}
+  if(c.choices.some(function(x){return !x})){return msg('saveMsg','err','選択肢を3つとも書いてください。')}
+  if(new Set(c.choices).size<3){return msg('saveMsg','err','同じ選択肢があります。')}
+  var edits=countEdits(),gain=30+edits*10;
+  S.qs.unshift({id:Date.now(),photo:photoSmall,theme:$('#theme').value.trim(),question:c.question,choices:c.choices,answer:c.answer,explanation:c.explanation,edits:edits,ai:!!draft});
+  S.exp+=gain;save();head();
+  msg('saveMsg','ok','保存しました！ +'+gain+' EXP（自分で直した：'+edits+'か所）');
+  // リセット
+  $('#editor').style.opacity=.5;$('#editor').style.pointerEvents='none';
+  $('#aiNote').style.display='none';draft=null;photoBig=photoSmall=null;
+  $('#drop').innerHTML='<span style="font-size:34px">📷</span><span>タップして写真を撮る／えらぶ</span>';
+  $('#file').value='';$('#theme').value='';$('#btnAI').disabled=true;$('#btnSelf').disabled=true;
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+
+/* 挑戦 */
+var cq=null;
+function renderPlay(){
+  var box=$('#playBox');
+  if(!S.qs.length){box.innerHTML='<div class="empty">まだ問題がありません。<br>「① 写真とつくる」で、最初の1問をつくろう。</div>';return}
+  box.innerHTML='<div class="h">どれに挑戦する？</div><p class="sub">自分がつくった問題に挑戦できます。</p><div class="pick">'+S.qs.map(function(q,i){return '<button class="mini" data-i="'+i+'"><img src="'+q.photo+'" alt="">'+'<div>'+esc(q.question)+'</div></button>'}).join('')+'</div>';
+  $$('.mini').forEach(function(b){b.onclick=function(){play(S.qs[+b.dataset.i])}});
+}
+function play(q){
+  cq=q;var order=[0,1,2].sort(function(){return Math.random()-.5});
+  var box=$('#playBox');
+  box.innerHTML='<img class="qimg" src="'+q.photo+'" alt="問題の写真"><div class="qtext">'+esc(q.question)+'</div>'+order.map(function(i){return '<button class="ch" data-i="'+i+'">'+esc(q.choices[i])+'</button>'}).join('')+'<div class="fb" id="fb"></div><div class="row" style="margin-top:14px"><button class="btn ghost sm" id="back">問題をえらびなおす</button></div>';
+  var done=false;
+  $$('.ch').forEach(function(b){b.onclick=function(){
+    if(done)return;done=true;var ok=+b.dataset.i===q.answer;
+    S.tries++;if(ok)S.right++;var g=ok?20:5;S.exp+=g;save();head();
+    $$('.ch').forEach(function(x){if(+x.dataset.i===q.answer)x.classList.add('ok')});if(!ok)b.classList.add('ng');
+    var f=$('#fb');f.style.display='block';f.innerHTML='<b>'+(ok?'せいかい！':'ざんねん…')+' +'+g+' EXP</b><br>'+esc(q.explanation||'');
+  }});
+  $('#back').onclick=renderPlay;
+}
+
+/* ふりかえり */
+function renderLook(){
+  $('#sMade').textContent=S.qs.length;
+  $('#sEdit').textContent=S.qs.reduce(function(a,q){return a+(q.edits||0)},0);
+  $('#sAcc').textContent=S.tries?Math.round(S.right/S.tries*100)+'%':'–';
+  var l=$('#list');
+  if(!S.qs.length){l.innerHTML='<div class="empty">まだ問題がありません。</div>';return}
+  l.innerHTML=S.qs.map(function(q,i){return '<div class="item"><img src="'+q.photo+'" alt=""><div class="tx">'+esc(q.question)+'<small>'+(q.theme?esc(q.theme)+'｜':'')+'答え：'+esc(q.choices[q.answer])+'｜直した：'+(q.edits||0)+'か所</small></div><button class="btn ghost sm" data-d="'+i+'">削除</button></div>'}).join('');
+  $$('[data-d]').forEach(function(b){b.onclick=function(){if(confirm('この問題を削除しますか？')){S.qs.splice(+b.dataset.d,1);save();renderLook()}}});
+}
+head();
+})();
+</script>
+</body>
+</html>
