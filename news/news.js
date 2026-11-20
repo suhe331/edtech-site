@@ -25,14 +25,14 @@ window.NEWS=[
    title:'U☆PoC 2026で「京王電鉄賞」を受賞しました',
    body:['2026年8月28日に開かれた電気通信大学のU☆PoC 2026で、「通学路からつくる交通安全学習アプリ」が、京王電鉄賞を受賞しました。',
          '審査してくださった皆さま、応援してくださった皆さまに、感謝いたします。この受賞を励みに、開発を進めていきます。',
-         {img:'images/news-uPoc-1.jpg', alt:'表彰式の様子', cap:'表彰式の様子'},
+         {img:'images/news-uPoc-1.jpg', alt:'表彰式の様子'},
          {img:'images/news-uPoc-2.jpg', alt:'受賞の記念写真', cap:'受賞の記念写真'},
          {href:'https://www.uec.ac.jp/research/venture/2026/contest_2.html', text:'電気通信大学のページで、U☆PoC 2026の結果を見る'}
         ]},
   {id:'n4',date:'2026-08-22',tag:'ちゃり検',
    title:'横浜青年館で、シミュレーションゲームのユーザビリティテストを実施しました',
    body:['2026年8月22日、横浜青年館（M-Base）で、教育支援協会南関東さまが主催するイベントにて、シミュレーションゲームのユーザビリティテストを実施しました。',
-         {img:'images/news-yokohama-1.jpg', alt:'イベント会場の様子', cap:'会場の様子'},
-         {img:'images/news-yokohama-2.jpg', alt:'テストの様子', cap:'テストの様子'}
+         {img:'images/news-yokohama-1.jpg', alt:'シミュレーションゲームの体験', cap:'会場の様子'},
+         {img:'images/news-yokohama-2.jpg', alt:'ちゃり検ドリルの体験の様子', cap:'テストの様子'}
         ]}
 ];
